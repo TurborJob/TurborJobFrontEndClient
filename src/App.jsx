@@ -5,6 +5,7 @@ import "./styles/style.css";
 import {DefaultLayout} from "./containers/DefaultLayout/index";
 import React from "react";
 import Loader from "./views/Loader";
+import NotFound from './views/NotFound';
 
 function App() {
   return (
@@ -38,7 +39,7 @@ function App() {
                 />
               );
             })}
-            <Route element={"404"} path={"*"}></Route>
+            <Route element={<NotFound />} path={"*"}></Route>
           </Routes>
         </div>
       </Router>

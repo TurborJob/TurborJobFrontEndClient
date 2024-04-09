@@ -14,11 +14,11 @@ import {
   InputGroup,
   InputRightElement,
 } from '@chakra-ui/react'
-import api from '../services/api'
+import api from '../../services/api'
 import { useState } from 'react'
-import { getToast } from '../utils/toast';
+import { getToast } from '../../utils/toast';
 import { useNavigate } from 'react-router-dom';
-import localStorage from '../utils/localStorage';
+import localStorage from '../../utils/localStorage';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 export default function Login() {
 
@@ -40,8 +40,9 @@ export default function Login() {
     const res = await api.login(data);
     if(res){
       toast(getToast("success", res.message, "Success"));
-      localStorage.add("token",res.metadata.token)
+      localStorage.add("accessToken",res.metadata.token)
       localStorage.add("refreshToken",res.metadata.refreshToken)
+      localStorage.add("profile",JSON.stringify(res.metadata.profile))
       navigate('/');
     }
     setIsLoading(false)

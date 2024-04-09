@@ -20,7 +20,7 @@ const axios = axiosInstance.create({
 
 axios.interceptors.request.use(
    async(config) =>{
-    const accessToken = local.get('accessToken') ? 'Bearer '+ local.get('accessToken') : null;
+    const accessToken = localStorage.getItem('accessToken') ? 'Bearer '+ localStorage.getItem('accessToken') : null;
     // if(config.url?.indexOf('./login') >= 0 || config.url?.indexOf('./getToken') >= 0 ){
     //   return config
     // }

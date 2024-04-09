@@ -23,6 +23,8 @@ import {
   useColorMode,
   Menu,
   Avatar,
+  useToast,
+  Link,
 } from "@chakra-ui/react";
 import {
   HamburgerIcon,
@@ -32,10 +34,22 @@ import {
   MoonIcon,
   SunIcon,
 } from "@chakra-ui/icons";
+import api from "../../services/api";
+import { useAppDispatch, useAppSelector } from "../../reduxs/hooks";
+import { getProfile } from "../../reduxs/accounts/account.slice";
+import { useEffect } from "react";
+import localStorage from "../../utils/localStorage";
+import { getToast } from "../../utils/toast";
 
 export default function WithSubnavigation() {
+  const { profile } = useAppSelector((state) => state.account);
+  const dispatch = useAppDispatch();
   const { isOpen, onToggle } = useDisclosure();
-  const { colorMode, toggleColorMode } = useColorMode()
+  const { colorMode, toggleColorMode } = useColorMode();
+
+  useEffect(() => {
+    dispatch(getProfile());
+  }, []);
 
   return (
     <Box>
@@ -73,54 +87,53 @@ export default function WithSubnavigation() {
           >
             TURBORJOB
           </Text>
-
           <Flex display={{ base: "none", md: "flex" }} ml={10}>
             <DesktopNav />
           </Flex>
         </Flex>
 
-        <Stack px={{base:3}}>
+        <Stack px={{ base: 3 }}>
           <Button onClick={toggleColorMode}>
             {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
           </Button>
         </Stack>
-
-        <Stack px={{base:3}}>
-          <UserNavItem />
-        </Stack>
-
-        <Stack
-          flex={{ base: 1, md: 0 }}
-          justify={"flex-end"}
-          direction={"row"}
-          spacing={6}
-        >
-          <Button
-            as={"a"}
-            fontSize={"sm"}
-            fontWeight={400}
-            variant={"link"}
-            href={"../login"}
+        {profile ? (
+          <Stack px={{ base: 3 }}>
+            <UserNavItem profile={profile} />
+          </Stack>
+        ) : (
+          <Stack
+            flex={{ base: 1, md: 0 }}
+            justify={"flex-end"}
+            direction={"row"}
+            spacing={6}
           >
-            Sign In
-          </Button>
-          <Button
-            as={"a"}
-            display={{ base: "none", md: "inline-flex" }}
-            fontSize={"sm"}
-            fontWeight={600}
-            color={"white"}
-            bg={"pink.400"}
-            href={"../register"}
-            _hover={{
-              bg: "pink.300",
-            }}
-          >
-            Sign Up
-          </Button>
-        </Stack>
+            <Button
+              as={"a"}
+              fontSize={"sm"}
+              fontWeight={400}
+              variant={"link"}
+              href={"../login"}
+            >
+              Sign In
+            </Button>
+            <Button
+              as={"a"}
+              display={{ base: "none", md: "inline-flex" }}
+              fontSize={"sm"}
+              fontWeight={600}
+              color={"white"}
+              bg={"pink.400"}
+              href={"../register"}
+              _hover={{
+                bg: "pink.300",
+              }}
+            >
+              Sign Up
+            </Button>
+          </Stack>
+        )}
       </Flex>
-
       <Collapse in={isOpen} animateOpacity>
         <MobileNav />
       </Collapse>
@@ -324,13 +337,30 @@ const NAV_ITEMS = [
   },
 ];
 
-const UserNavItem = () => {
+const UserNavItem = ({ profile }) => {
+  const toast = useToast();
+
+  const handleLogout = async () => {
+    let res = await api.logout();
+    if (res) {
+      localStorage.clear();
+      toast(getToast("success", res.metadata, "Success"));
+      setTimeout(() => {
+        location.replace("../");
+      }, 1000);
+    }
+  };
+
   return (
     <Menu>
       <MenuButton rounded={"full"} variant={"link"} cursor={"pointer"} minW={0}>
         <Avatar
           size={"sm"}
-          src={"https://avatars.dicebear.com/api/male/username.svg"}
+          src={
+            profile?.avatar
+              ? profile?.avatar
+              : "https://avatars.dicebear.com/api/male/username.svg"
+          }
         />
       </MenuButton>
       <MenuList alignItems={"center"}>
@@ -338,18 +368,22 @@ const UserNavItem = () => {
         <Center>
           <Avatar
             size={"2xl"}
-            src={"https://avatars.dicebear.com/api/male/username.svg"}
+            src={
+              profile?.avatar
+                ? profile?.avatar
+                : "https://avatars.dicebear.com/api/male/username.svg"
+            }
           />
         </Center>
         <br />
         <Center>
-          <p>Username</p>
+          <p>{profile.fullName}</p>
         </Center>
         <br />
         <MenuDivider />
-        <MenuItem>Your Servers</MenuItem>
-        <MenuItem>Account Settings</MenuItem>
-        <MenuItem>Logout</MenuItem>
+        <MenuItem>Your Profile</MenuItem>
+        <MenuItem><Link href={"../account-setting"}>Account Settings</Link></MenuItem>
+        <MenuItem onClick={handleLogout}>Logout</MenuItem>
       </MenuList>
     </Menu>
   );

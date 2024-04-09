@@ -13,10 +13,9 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react'
 
-import WithSpeechBubbles from './WithSpeechBubbles'
-import Pricing from './Pricing'
-import Statistics from './Statistics'
-import Contact from './Conctact'
+import WithSpeechBubbles from '../HomePage/WithSpeechBubbles'
+import Pricing from '../HomePage/Pricing'
+import Statistics from '../HomePage/Statistics'
 
 export default function HomePage() {
   return (

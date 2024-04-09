@@ -19,32 +19,41 @@ import { Button, DatePicker, Form, Input, Select, Upload, message } from "antd";
 import { useState } from "react";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import ImgCrop from "antd-img-crop";
-import api from "../services/api";
-import { getToast } from "../utils/toast";
+import api from "../../services/api";
+import { getToast } from "../../utils/toast";
+import moment from "moment";
+import local from "../../utils/localStorage";
+import { useNavigate } from "react-router-dom";
 
 export default function Register() {
+  const toast = useToast();
+  const navigate = useNavigate();
   const [form] = Form.useForm();
   const [isLoading, setIsLoading] = useState(false);
   const [avatarLink, setAvatarLink] = useState(null);
 
-  const handleRegister = () => {
+  const handleRegister = async() => {
     let data = form.getFieldValue();
+    let {username, password, address, phone, birthday, gender, fullName, email, firstName, lastName} = data
 
     if(lastName && firstName){
-      data.fullname = firstName + " " + lastName;
+      data.fullName = firstName + " " + lastName;
     }
 
     if(avatarLink){
       data.avatar = avatarLink.fileLink
-      console.log(data.avatar)
     }
-    let {username, password, address, phone, birthday, gender, fullname, avatar, email} = data
 
-    if(username && password && address && phone && birthday && gender && fullname && email){
+    if(username && password && address && phone && birthday && gender && fullName && email){
+      birthday = moment(birthday).format('DD/MM/yyyy');
       setIsLoading(true);
-      let res = api.register(data);
-      if(res){
-
+      let res = await api.register({...data,birthday});
+      if(res && !res?.errorMessage){
+        toast(getToast("success", res.message, "Success"));
+        local.add("accessToken",res.metadata.token)
+        local.add("refreshToken",res.metadata.refreshToken)
+        local.add("profile",JSON.stringify(res.metadata.profile))
+        navigate('/');
       }
       setIsLoading(false);
     }
@@ -228,6 +237,7 @@ export default function Register() {
                     rules={[
                       { required: true, message: "Birthday is require!" },
                     ]}
+                    format={'dd/MM/yyyy'}
                   >
                     <DatePicker />
                   </Form.Item>
@@ -253,9 +263,9 @@ export default function Register() {
               </Text>
             </Stack>
             <UnorderedList>
-            <ListItem>Username phải có độ dài từ 6 đến 20 kí tự</ListItem>
-            <ListItem>Mật khẩu bao gồm cả chữ hoa, chữ thường, số, ký tự đặc biệt và ít nhất 8 kỹ tự</ListItem>
-            <ListItem>Số điện thoại của các nhà mạng Việt Nam 10 hoặc 11 số</ListItem>
+            <ListItem>Username must have a length of 6 to 20 characters.</ListItem>
+            <ListItem>Password must contain uppercase letters, lowercase letters, numbers, special characters, and be at least 8 characters long.</ListItem>
+            <ListItem>Phone numbers for Vietnamese carriers must be either 10 or 11 digits long.</ListItem>
           </UnorderedList>
           </Stack>
         </Box>
@@ -291,21 +301,18 @@ const uploadAvatar = (setAvatarLink) => {
   };
 
   const onChange = async ({ fileList: newFileList }) => {
-    const formData = new FormData();
-    console.log("newFileList", newFileList);
-    if (newFileList && newFileList.length > 0) {
-      formData.append("file", newFileList[0].originFileObj);
-    }
-    const headers = {
-      "Content-Type": "multipart/form-data",
-    };
-    console.log("newFileList", newFileList);
-
     if (newFileList.size > 10000) {
-      toast(getToast("File quá lớn!"));
-      console.log('ewFileList.size',newFileList.size)
+      toast(getToast("File too big!"));
       return;
     } else {
+      console.log('newFileList.size',newFileList.size)
+      const headers = {
+        "Content-Type": "multipart/form-data",
+      };
+      const formData = new FormData();
+      if (newFileList && newFileList.length > 0) {
+        formData.append("file", newFileList[0].originFileObj);
+      }
       const res = await api.uploadFile(formData, headers);
       if (res) {
         newFileList[0].status = "success";

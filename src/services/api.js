@@ -7,6 +7,7 @@ var path = {
   login: { href: "/api/v1/login" },
   uploadFile: { href: "/api/v1/all/upload-file" },
   register: { href: "/api/v1/all/register" },
+  logout: { href: "/api/v1/logout" },
 
   // logout: "/api/user/logout",
   // getCaptcha: "/api/user/create-captcha",
