@@ -13,7 +13,7 @@ import {
   ListItem,
 } from "@chakra-ui/react";
 
-import "../styles/register.css";
+import "../../styles/register.css";
 
 import { Button, DatePicker, Form, Input, Select, Upload, message } from "antd";
 import { useState } from "react";
@@ -262,11 +262,11 @@ export default function Register() {
                 </Link>
               </Text>
             </Stack>
-            <UnorderedList>
-            <ListItem>Username must have a length of 6 to 20 characters.</ListItem>
-            <ListItem>Password must contain uppercase letters, lowercase letters, numbers, special characters, and be at least 8 characters long.</ListItem>
-            <ListItem>Phone numbers for Vietnamese carriers must be either 10 or 11 digits long.</ListItem>
-          </UnorderedList>
+            <UnorderedList style={{fontSize:"small", fontWeight:"lighter"}}>
+              <ListItem>Username must have a length of 6 to 20 characters.</ListItem>
+              <ListItem>Password must contain uppercase letters, lowercase letters, numbers, special characters, and be at least 8 characters long.</ListItem>
+              <ListItem>Phone numbers for Vietnamese carriers must be either 10 or 11 digits long.</ListItem>
+            </UnorderedList>
           </Stack>
         </Box>
       </Stack>
