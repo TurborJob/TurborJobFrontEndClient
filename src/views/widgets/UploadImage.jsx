@@ -33,12 +33,10 @@ const UploadImage= ({onChangeValue, value, limitImage}) => {
     };
   
     const onChange = async ({ fileList: newFileList }) => {
-        console.log('fileList - newFileList :',fileList, newFileList)
       if (newFileList.size > 10000) {
         toast(getToast("File too big!"));
         return;
       } else {
-        console.log("newFileList.size", newFileList, fileList);
         const headers = {
           "Content-Type": "multipart/form-data",
         };
@@ -50,7 +48,7 @@ const UploadImage= ({onChangeValue, value, limitImage}) => {
           const res = await api.uploadFile(formData, headers);
           if (res) {
             newFileList[0].status = "success";
-            onChangeValue(res.metadata);
+            onChangeValue([...value,res?.metadata?.fileLink]);
           }
         }
       }

@@ -13,6 +13,8 @@ var path = {
   updateProfile: {href: "/api/v1/auth/update-profile"},
   updateBusiness: {href: "/api/v1/user-only/update-business"},
 
+  createJob: {href: "/api/v1/business/create-job"},
+
   // logout: "/api/user/logout",
   // getCaptcha: "/api/user/create-captcha",
 };
