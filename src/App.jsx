@@ -6,15 +6,18 @@ import {DefaultLayout} from "./containers/DefaultLayout/index";
 import React from "react";
 import Loader from "./views/Loader";
 import NotFound from './views/NotFound';
+import { useAppSelector } from './reduxs/hooks';
 
 function App() {
+  const { userModeView } = useAppSelector((state) => state.account);
+
   return (
     <>
       <Router>
         <div className="App">
           <Routes>
             {routes.publicRouters.map((route, index) => {
-              const Page = route.component;
+              let Page = route.component;
               let Layout;
               if (route?.layout) {
                 Layout = route.layout;
@@ -24,6 +27,9 @@ function App() {
               }
               if (route.layout === null) {
                 Layout = React.Fragment;
+              }
+              if(route?.role && !(route.role == userModeView)){
+                Page = NotFound
               }
               return (
                 <Route

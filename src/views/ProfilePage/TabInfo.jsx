@@ -1,5 +1,7 @@
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import AccountSetting from "./AccountSetting";
+import ProfileSetting from "./ProfileSetting";
+import BusinessSetting from "./BusinessSetting";
 
 export default function TabInfo() {
   function DataTabs({ data }) {
@@ -30,12 +32,12 @@ export default function TabInfo() {
     {
       label: "Profile Setting",
       content:
-        "Perhaps the surest dish ever invented but fills the stomach more than rice.",
+        <ProfileSetting />,
     },
     {
-      label: "Company Setting",
+      label: "Business Setting",
       content:
-        "Perhaps the surest dish ever invented but fills the stomach more than rice.",
+        <BusinessSetting />,
     },
     {
       label: "Notification",

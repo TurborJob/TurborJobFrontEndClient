@@ -10,6 +10,8 @@ var path = {
   changePass: {href: "api/v1/auth/change-pass"},
   logout: { href: "/api/v1/logout" },
   getRoleName: { href: "/api/v1/user/get-role-name" },
+  updateProfile: {href: "/api/v1/auth/update-profile"},
+  updateBusiness: {href: "/api/v1/user-only/update-business"},
 
   // logout: "/api/user/logout",
   // getCaptcha: "/api/user/create-captcha",

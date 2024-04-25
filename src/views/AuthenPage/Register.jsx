@@ -45,7 +45,7 @@ export default function Register() {
     }
 
     if(username && password && address && phone && birthday && gender && fullName && email){
-      birthday = moment(birthday).format('DD/MM/yyyy');
+      birthday = moment(new Date(birthday)).format('DD/MM/yyyy');
       setIsLoading(true);
       let res = await api.register({...data,birthday});
       if(res && !res?.errorMessage){
@@ -313,10 +313,12 @@ const uploadAvatar = (setAvatarLink) => {
       if (newFileList && newFileList.length > 0) {
         formData.append("file", newFileList[0].originFileObj);
       }
-      const res = await api.uploadFile(formData, headers);
-      if (res) {
-        newFileList[0].status = "success";
-        setAvatarLink(res.metadata)
+      if(fileList && fileList?.originFileObj){
+        const res = await api.uploadFile(formData, headers);
+        if (res) {
+          newFileList[0].status = "success";
+          setAvatarLink(res.metadata)
+        }
       }
     }
     setFileList(newFileList);

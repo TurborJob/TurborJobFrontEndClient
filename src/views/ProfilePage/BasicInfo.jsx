@@ -7,29 +7,36 @@ import {
   Stack,
   Image,
 } from "@chakra-ui/react";
-import { useAppSelector } from "../../reduxs/hooks";
+import { useAppDispatch, useAppSelector } from "../../reduxs/hooks";
 import { Flex, Rate } from "antd";
 import { useEffect, useState } from "react";
 import api from "../../services/api";
+import { setRoles } from "../../reduxs/accounts/account.slice";
 
 const IMAGE =
   "https://images.unsplash.com/photo-1518051870910-a46e30d9db16?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1350&q=80";
 
 export default function BasicInfo() {
-  const { profile } = useAppSelector((state) => state.account);
+  const { profile, roles } = useAppSelector((state) => state.account);
+  const dispatch = useAppDispatch();
+
   const [roleName, setRoleName] = useState(null);
 
-  const getRoleName = async (phone) => {
-    console.log(phone);
-    let res = await api.getRoleName({ phone });
-    setRoleName(res.metadata);
+  const getRoleName = async () => {
+    let rolesName = "";
+    for (let i = 0; i < roles.length; i++) {
+      if (i == roles.length - 1 && i != 0) {
+        rolesName = rolesName + ", " + roles[i].name;
+      } else {
+        rolesName = rolesName + " " + roles[i].name;
+      }
+    }
+    setRoleName(rolesName);
   };
 
   useEffect(() => {
-    if (profile?.phone) {
-      getRoleName(profile?.phone);
-    }
-  }, [profile]);
+    getRoleName();
+  }, [roles]);
 
   return (
     <Center>
@@ -80,14 +87,17 @@ export default function BasicInfo() {
           <Heading fontSize={"2xl"} fontFamily={"body"} fontWeight={500}>
             {profile?.fullName}
           </Heading>
-          <Text color={"gray.600"} as="i">
+          <Center color={"gray.600"} as="i">
             {roleName}
-          </Text>
+          </Center>
           <Stack direction={"row"} align={"center"}></Stack>
           <Stack>
             <Flex gap="middle" vertical>
               <Rate disabled value={profile?.rating} />
             </Flex>
+            <Center gap="middle" vertical>
+              {profile?.countRate} reviewer
+            </Center>
           </Stack>
         </Stack>
       </Box>

@@ -3,7 +3,7 @@ import React from "react";
 import DefaultHeader from "./DefaultHeader";
 import DefaultFooter from "./DefaultFooter";
 import DefaultAside from "./DefaultAside";
-import { Container, useDisclosure } from "@chakra-ui/react";
+import { Container, position, useDisclosure } from "@chakra-ui/react";
 
 function DefaultLayout({ children }) {
   const {
@@ -17,7 +17,7 @@ function DefaultLayout({ children }) {
         <div className="app-header">
           <DefaultHeader />
         </div>
-        <div className="app-body" style={{minHeight:"800px"}}>
+        <div className="app-body" style={{minHeight:"800px", paddingTop:"50px"}} >
             <div className="mt-4" >
               <div className="">{children}</div>
             </div>

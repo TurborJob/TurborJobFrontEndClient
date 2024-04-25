@@ -2,7 +2,7 @@ import { Box, Heading, Text, Button, Link } from "@chakra-ui/react";
 
 export default function NotFound() {
   return (
-    <Box textAlign="center" py={10} px={6}>
+    <Box textAlign="center" py={100} px={6}>
       <Heading
         display="inline-block"
         as="h2"

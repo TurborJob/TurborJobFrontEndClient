@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Box,
   Flex,
@@ -44,7 +42,6 @@ import { useEffect } from "react";
 import localStorage from "../../utils/localStorage";
 import { getToast } from "../../utils/toast";
 import { Link } from "react-router-dom";
-import { NAV_ITEMS_BUSINESS } from "../BusinessLayout/BusinessHeader";
 
 export default function WithSubnavigation() {
   const { profile, userModeView, roles } = useAppSelector(
@@ -54,25 +51,12 @@ export default function WithSubnavigation() {
   const { isOpen, onToggle } = useDisclosure();
   const { colorMode, toggleColorMode } = useColorMode();
 
-  const getRoleName = async () => {
-    let res = await api.getRoleName();
-    if (res) {
-      dispatch(setRoles(res.metadata));
-    }
-  };
-
-  useEffect(()=>{
-    if(profile){
-      getRoleName()
-    }
-  },[profile])
-
   useEffect(() => {
     dispatch(getProfile());
   }, []);
 
   return (
-    <Box position={"fixed"} width={"100%"} zIndex={99} top={0}>
+    <Box position={"fixed"} width={"100%"} zIndex={99}>
       <Flex
         bg={useColorModeValue(
           `${userModeView == "Business" ? "red.200" : "white"}`,
@@ -114,7 +98,7 @@ export default function WithSubnavigation() {
             <DesktopNav userModeView={userModeView} />
           </Flex>
         </Flex>
-        {roles?.length > 1 && userModeView == "Business" && (
+        {roles.length > 1 && userModeView == "Business" && (
           <Stack>
             <Button
               colorScheme="purple"
@@ -124,7 +108,7 @@ export default function WithSubnavigation() {
             </Button>
           </Stack>
         )}
-        {roles?.length > 1 && userModeView == "User" && (
+        {roles.length > 1 && userModeView == "User" && (
           <Stack>
             <Button
               colorScheme="pink"
@@ -412,6 +396,35 @@ const NAV_ITEMS_WORKER = [
   },
 ];
 
+export const NAV_ITEMS_BUSINESS = [
+  {
+    label: "Job Management",
+    href: "../job-management/home",
+  },
+  {
+    label: "Find Person",
+    children: [
+      {
+        label: "Real Time",
+        subLabel: "Find worker realtime",
+        href: "#",
+      },
+      {
+        label: "Normal",
+        subLabel: "Find worker normal",
+        href: "#",
+      },
+    ],
+  },
+  {
+    label: "About",
+    href: "#",
+  },
+  {
+    label: "Contact",
+    href: "#",
+  },
+];
 
 const UserNavItem = ({ profile }) => {
   const toast = useToast();

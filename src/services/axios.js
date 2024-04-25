@@ -55,6 +55,12 @@ axios.interceptors.response.use(
   },
   (err) => {
     toastLibrary("error",err.response?.data?.errorMessage)
+    if(err.response.status === 403){
+      localStorage.clear()
+      window.location.replace(
+        "../login",
+      );
+    }
     console.log('err',err)
   }
 );
