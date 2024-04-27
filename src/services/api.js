@@ -14,6 +14,10 @@ var path = {
   updateBusiness: {href: "/api/v1/user-only/update-business"},
 
   createJob: {href: "/api/v1/business/create-job"},
+  getJob: {href: "/api/v1/business/get-job"},
+  findNormalJob : {href: "/api/v1/business/find-normal-job"},
+  getNormalJob: {href: "/api/v1/user-only/get-normal-job"},
+  applyNormalJob: {href: "/api/v1/user-only/apply-normal-job"}
 
   // logout: "/api/user/logout",
   // getCaptcha: "/api/user/create-captcha",

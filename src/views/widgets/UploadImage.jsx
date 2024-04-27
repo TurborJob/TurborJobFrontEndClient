@@ -8,14 +8,7 @@ import { useToast } from '@chakra-ui/react';
 
 const UploadImage= ({onChangeValue, value, limitImage}) => {
     const toast = useToast();
-    const [fileList, setFileList] = useState([
-      // {
-      //   uid: '-1',
-      //   name: 'image.png',
-      //   status: 'done',
-      //   url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-      // },
-    ]);
+    const [fileList, setFileList] = useState([]);
   
     const onPreview = async (file) => {
       let src = file.url;

@@ -1,7 +1,7 @@
 import React from 'react'
-import Statistics from '../../HomePage/Statistics'
+import Statistics from '../Home/Statistic'
 
-function HomeBusiness() {
+function HomeWorker() {
   return (
     <div>
         <Statistics />
@@ -9,4 +9,4 @@ function HomeBusiness() {
   )
 }
 
-export default HomeBusiness
+export default HomeWorker

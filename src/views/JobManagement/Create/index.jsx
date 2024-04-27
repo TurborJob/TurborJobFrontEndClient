@@ -16,7 +16,7 @@ import UploadImage from "../../widgets/UploadImage";
 import IpPicker from "../../widgets/IpPicker";
 import TextArea from "antd/es/input/TextArea";
 import { getToast } from "../../../utils/toast";
-import api from "../../../services/api"
+import api from "../../../services/api";
 import moment from "moment";
 const { RangePicker } = DatePicker;
 
@@ -27,42 +27,51 @@ function CreateJobPage() {
   const [images, setImages] = useState([]);
   const [ip, setIp] = useState();
 
-  form.setFieldValue("quantityWorker", 1)
-  form.setFieldValue("isVehicle", false)
-  form.setFieldValue("gender", "all")
+  form.setFieldValue("quantityWorker", 1);
+  form.setFieldValue("isVehicle", false);
+  form.setFieldValue("gender", "all");
+  form.setFieldValue("salary", 0);
 
-  const handleCreateJob = async() => {
-    // setIsLoading(true);
+  const handleCreateJob = async () => {
+    setIsLoading(true);
 
     let data = form.getFieldValue();
 
-    let {rangeTime} = data;
+    let { rangeTime } = data;
 
-    if(rangeTime){
-      data.startDate = rangeTime[0].format("YYYY-MM-DD")
-      data.dueDate = rangeTime[1].format("YYYY-MM-DD")
+    if (rangeTime) {
+      data.startDate = rangeTime[0].format("YYYY-MM-DD");
+      data.dueDate = rangeTime[1].format("YYYY-MM-DD");
       delete data.rangeTime;
     }
 
-    if(images.length < 1){
+    if (images.length < 1) {
       toast(getToast("error", "Images is require!", "Error"));
-      return
+      setIsLoading(false);
+      return;
     }
 
-    if(!ip){
+    if (!ip) {
       toast(getToast("error", "IP address is require!", "Error"));
-      return
+      setIsLoading(false);
+      return;
     }
 
     data.lat = ip.lat;
     data.lng = ip.lng;
+    data.salary = parseInt(data.salary);
 
-    let payload = {...data, images};
+    let payload = { ...data, images };
 
     let res = await api.createJob(payload);
+    if (res) {
+      toast(getToast("success", res?.metadata, "Success"));
+    }
 
     setIsLoading(false);
-  }
+  };
+
+  const clearForm = () => {};
 
   const disabledDateCurrent = (current) => {
     const today = new Date();
@@ -118,13 +127,20 @@ function CreateJobPage() {
                   <TextArea />
                 </Form.Item>
                 <Form.Item
+                  label={<Text>Salary</Text>}
+                  name="salary"
+                  rules={[{ required: true, message: "Salary is require!" }]}
+                >
+                  <Input type="number" suffix="VND" />
+                </Form.Item>
+                <Form.Item
                   label={<Text>Quantity worker</Text>}
                   name="quantityWorker"
                   rules={[
                     { required: true, message: "Quantity worker is require!" },
                   ]}
                 >
-                  <InputNumber min={1}/>
+                  <InputNumber min={1} />
                 </Form.Item>
                 <Form.Item
                   name="vehicle"
@@ -144,7 +160,10 @@ function CreateJobPage() {
                     },
                   ]}
                 >
-                  <RangePicker format="DD/MM/YYYY" disabledDate={disabledDateCurrent}/>
+                  <RangePicker
+                    format="DD/MM/YYYY"
+                    disabledDate={disabledDateCurrent}
+                  />
                 </Form.Item>
                 <Form.Item
                   name="gender"
@@ -175,13 +194,13 @@ function CreateJobPage() {
                 <IpPicker onChangeValue={setIp} value={ip} />
               </Col>
               <Button
-                  type="primary"
-                  htmlType="submit"
-                  loading={isLoading}
-                  onClick={handleCreateJob}
-                >
-                  Create Job
-                </Button>
+                type="primary"
+                htmlType="submit"
+                loading={isLoading}
+                onClick={handleCreateJob}
+              >
+                Create Job
+              </Button>
             </Row>
           </Col>
         </Row>

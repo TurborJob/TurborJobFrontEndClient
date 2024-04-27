@@ -24,9 +24,9 @@ import { Link } from "react-router-dom";
 const LinkItems = [
   { name: "Home", icon: FiHome, href: "../job-management/home" },
   { name: "Create", icon: FiPlus, href: "../job-management/create" },
-  { name: "List Jobs", icon: FiList, href: "../job-management/list-job" },
+  { name: "List Jobs", icon: FiList, href: "../job-management/list" },
   { name: "History", icon: FiClipboard, href: "../job-management/history" },
-  { name: "Rating List", icon: FiStar, href: "../job-management/list-rating" },
+  { name: "Rating List", icon: FiStar, href: "../job-management/rate" },
 ];
 
 export default function SimpleSidebarBusiness() {
@@ -75,8 +75,8 @@ const SidebarContent = ({ onClose, ...rest }) => {
         </Text>
         <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
       </Flex>
-      {LinkItems.map((link) => (
-        <Link to={link?.href || "#"}>
+      {LinkItems.map((link, idx) => (
+        <Link key={idx} to={link?.href || "#"}>
           <NavItem key={link.name} icon={link.icon}>
             {link.name}
           </NavItem>

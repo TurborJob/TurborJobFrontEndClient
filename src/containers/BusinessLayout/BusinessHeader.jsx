@@ -42,6 +42,7 @@ import { useEffect } from "react";
 import localStorage from "../../utils/localStorage";
 import { getToast } from "../../utils/toast";
 import { Link } from "react-router-dom";
+import { NAV_ITEMS_BUSINESS, NAV_ITEMS_WORKER } from "../../constant";
 
 export default function WithSubnavigation() {
   const { profile, userModeView, roles } = useAppSelector(
@@ -104,7 +105,7 @@ export default function WithSubnavigation() {
               colorScheme="purple"
               onClick={() => dispatch(setUserModeView("User"))}
             >
-              Business View
+              Worker View
             </Button>
           </Stack>
         )}
@@ -114,7 +115,7 @@ export default function WithSubnavigation() {
               colorScheme="pink"
               onClick={() => dispatch(setUserModeView("Business"))}
             >
-              Worker View
+              Business View
             </Button>
           </Stack>
         )}
@@ -262,39 +263,41 @@ const DesktopNav = ({ userModeView }) => {
 
 const DesktopSubNav = ({ label, href, subLabel }) => {
   return (
-    <Box
-      as="a"
-      href={href}
-      role={"group"}
-      display={"block"}
-      p={2}
-      rounded={"md"}
-      _hover={{ bg: useColorModeValue("pink.50", "gray.900") }}
-    >
-      <Stack direction={"row"} align={"center"}>
-        <Box>
-          <Text
+    <Link to={href ?? "#"}>
+      <Box
+        as="a"
+        href={href}
+        role={"group"}
+        display={"block"}
+        p={2}
+        rounded={"md"}
+        _hover={{ bg: useColorModeValue("pink.50", "gray.900") }}
+      >
+        <Stack direction={"row"} align={"center"}>
+          <Box>
+            <Text
+              transition={"all .3s ease"}
+              _groupHover={{ color: "pink.400" }}
+              fontWeight={500}
+            >
+              {label}
+            </Text>
+            <Text fontSize={"sm"}>{subLabel}</Text>
+          </Box>
+          <Flex
             transition={"all .3s ease"}
-            _groupHover={{ color: "pink.400" }}
-            fontWeight={500}
+            transform={"translateX(-10px)"}
+            opacity={0}
+            _groupHover={{ opacity: "100%", transform: "translateX(0)" }}
+            justify={"flex-end"}
+            align={"center"}
+            flex={1}
           >
-            {label}
-          </Text>
-          <Text fontSize={"sm"}>{subLabel}</Text>
-        </Box>
-        <Flex
-          transition={"all .3s ease"}
-          transform={"translateX(-10px)"}
-          opacity={0}
-          _groupHover={{ opacity: "100%", transform: "translateX(0)" }}
-          justify={"flex-end"}
-          align={"center"}
-          flex={1}
-        >
-          <Icon color={"pink.400"} w={5} h={5} as={ChevronRightIcon} />
-        </Flex>
-      </Stack>
-    </Box>
+            <Icon color={"pink.400"} w={5} h={5} as={ChevronRightIcon} />
+          </Flex>
+        </Stack>
+      </Box>
+    </Link>
   );
 };
 
@@ -369,62 +372,6 @@ const MobileNavItem = ({ label, children, href }) => {
     </Stack>
   );
 };
-
-const NAV_ITEMS_WORKER = [
-  {
-    label: "Find Jobs",
-    children: [
-      {
-        label: "Real Time",
-        subLabel: "Find your work realtime",
-        href: "#",
-      },
-      {
-        label: "Normal",
-        subLabel: "Find your work normal",
-        href: "#",
-      },
-    ],
-  },
-  {
-    label: "About",
-    href: "#",
-  },
-  {
-    label: "Contact",
-    href: "#",
-  },
-];
-
-export const NAV_ITEMS_BUSINESS = [
-  {
-    label: "Job Management",
-    href: "../job-management/home",
-  },
-  {
-    label: "Find Person",
-    children: [
-      {
-        label: "Real Time",
-        subLabel: "Find worker realtime",
-        href: "#",
-      },
-      {
-        label: "Normal",
-        subLabel: "Find worker normal",
-        href: "#",
-      },
-    ],
-  },
-  {
-    label: "About",
-    href: "#",
-  },
-  {
-    label: "Contact",
-    href: "#",
-  },
-];
 
 const UserNavItem = ({ profile }) => {
   const toast = useToast();
