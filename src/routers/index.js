@@ -15,6 +15,11 @@ const JobHome = React.lazy(() => import('../views/JobManagement/Home'));
 const JobCreate = React.lazy(() => import('../views/JobManagement/Create'));
 const JobList = React.lazy(() => import('../views/JobManagement/ListJob'));
 const FindJobs = React.lazy(() => import('../views/FindJobs'));
+const JobsApply = React.lazy(() => import('../views/JobsApply'));
+const JobRequestForm =  React.lazy(() => import('../views/JobManagement/ListRequestForms'));
+const RatingPage =  React.lazy(() => import('../views/Rating'));
+
+
 
 
 
@@ -32,7 +37,11 @@ let publicRouters = [
   { path: '/job-management/home', name: 'Job Home', component: JobHome, layout: BusinessLayout, role:"Business"},
   { path: '/job-management/create', name: 'Job Create Page', component: JobCreate, layout: BusinessLayout, role:"Business"},
   { path: '/job-management/list', name: 'Job List Page', component: JobList, layout: BusinessLayout, role:"Business"},
-  { path: '/find-jobs/normal', name: 'Find Jobs Page', component: FindJobs, layout: BusinessLayout, role:"User"},
+  { path: '/find-jobs/normal', name: 'Find Jobs Page', component: FindJobs, layout: DefaultLayout, role:"User"},
+  { path: '/job-apply', name: 'Jobs Apply Page', component: JobsApply, layout: DefaultLayout, role:"User"},
+  { path: '/request-form', name: "Request Form", component: JobRequestForm, layout: BusinessLayout, role:"Business"},
+  { path: '/rating', name: "Rating Page", component: RatingPage, layout: DefaultLayout, role:"User"},
+
 
 ];
 routes = {

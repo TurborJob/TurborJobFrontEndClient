@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Center,
   Container,
   Modal,
   ModalBody,
@@ -22,7 +21,7 @@ import { getToast } from "../../utils/toast";
 import CardJob from "./CardJob";
 import Loader from "../Loader";
 
-function FindJobs() {
+function JobsApply() {
   const [jobs, setJobs] = useState([]);
   const [pagination, setPagination] = useState({ page: 0, size: 10, total: 0 });
   const [jobIdConfirm, setJobIdConfirm] = useState();
@@ -32,46 +31,17 @@ function FindJobs() {
   const [isLoadingNormal, setIsLoadingNormal] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const getMyLocation = async () => {
-    const location = window.navigator && window.navigator.geolocation;
-
-    if (location) {
-      location.getCurrentPosition(
-        (position) => {
-          return {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-          };
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
-    }
-  };
-
   const fetch = useCallback(async (page = 0, size = 10) => {
     const location = window.navigator && window.navigator.geolocation;
 
     if (location) {
-      location.getCurrentPosition(
-        async (position) => {
-          let geolocation = {
-            lat: position.coords.latitude,
-            long: position.coords.longitude,
-          };
-          setIsLoadingNormal(true);
-          const res = await api.getNormalJob({ page, size, ...geolocation });
-          if (res) {
-            setJobs(res?.metadata?.jobs);
-            setPagination({ ...pagination, total: res?.metadata?.total });
-          }
-          setIsLoadingNormal(false);
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
+      setIsLoadingNormal(true);
+      const res = await api.getRequestNormalJob({ page, size });
+      if (res) {
+        setJobs(res?.metadata?.jobs);
+        setPagination({ ...pagination, total: res?.metadata?.total });
+      }
+      setIsLoadingNormal(false);
     }
   }, []);
 
@@ -85,7 +55,6 @@ function FindJobs() {
 
   const handlerApplyJobNormal = async () => {
     setIsLoadingNormal(true);
-    console.log("jobId", jobIdConfirm, descConfirm);
     if (!jobIdConfirm || !descConfirm) {
       toast(getToast("error", "Invalid Parameter", "Error"));
       return;
@@ -124,7 +93,8 @@ function FindJobs() {
               key={job?.id}
             >
               <CardJob
-                job={job}
+                job={job?.jobId}
+                status={job?.status}
                 handleApply={() => {
                   onOpen();
                   setJobIdConfirm(job?.id);
@@ -172,4 +142,4 @@ function FindJobs() {
   );
 }
 
-export default FindJobs;
+export default JobsApply;

@@ -16,11 +16,11 @@ export const NAV_ITEMS_WORKER = [
     },
     {
       label: "Job Apply",
-      href: "#",
+      href: "/job-apply",
     },
     {
       label: "Rating",
-      href: "#",
+      href: "/rating",
     },
     {
       label: "History",

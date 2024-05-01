@@ -11,10 +11,13 @@ import {
 } from "@chakra-ui/react";
 import CarouselImages from "../../widgets/CarouselImages";
 import moment from "moment";
+import { Link, useNavigate } from "react-router-dom";
 
-export default function CardJob({ job, handlerFindJobNormal }) {
+export default function CardJob({ job, handlerFindJobNormal, handleUpdateJobToDone}) {
+  const navigate = useNavigate();
+
   const renderStatus = () => {
-    // inactive, processing, done, fail.
+    // inactive, processing, success, done, fail.
     if (job?.status == "inactive") {
       return (
         <Badge fontWeight={"800"} variant="solid" colorScheme="red">
@@ -34,6 +37,14 @@ export default function CardJob({ job, handlerFindJobNormal }) {
     if (job?.status == "done") {
       return (
         <Badge fontWeight={"800"} variant="solid" colorScheme="green">
+          {job.status}
+        </Badge>
+      );
+    }
+
+    if (job?.status == "success") {
+      return (
+        <Badge fontWeight={"800"} variant="solid" colorScheme="teal">
           {job.status}
         </Badge>
       );
@@ -59,7 +70,7 @@ export default function CardJob({ job, handlerFindJobNormal }) {
             _focus={{
               bg: "gray.200",
             }}
-            onClick={()=>handlerFindJobNormal(job?.id)}
+            onClick={() => handlerFindJobNormal(job?.id)}
           >
             Find
           </Button>
@@ -87,24 +98,27 @@ export default function CardJob({ job, handlerFindJobNormal }) {
 
     if (job?.status == "processing") {
       return (
-      <Button
-        flex={1}
-        fontSize={"sm"}
-        rounded={"full"}
-        bg={"yellow.400"}
-        color={"white"}
-        boxShadow={
-          "0px 1px 25px -5px rgb(66 153 225 / 48%), 0 10px 10px -5px rgb(66 153 225 / 43%)"
-        }
-        _hover={{
-          bg: "yellow.500",
-        }}
-        _focus={{
-          bg: "yellow.500",
-        }}
-      >
-        Processing
-      </Button>)
+        <Button
+          flex={1}
+          variant="outline"
+          fontSize={"sm"}
+          rounded={"full"}
+          bg={"blue.400"}
+          color={"white"}
+          boxShadow={
+            "0px 1px 25px -5px rgb(66 153 225 / 48%), 0 10px 10px -5px rgb(66 153 225 / 43%)"
+          }
+          _hover={{
+            bg: "blue.500",
+          }}
+          _focus={{
+            bg: "blue.500",
+          }}
+          onClick={() => navigate(`../request-form#${job?.id}`)}
+        >
+          Request form
+        </Button>
+      );
     }
 
     if (job?.status == "done") {
@@ -148,7 +162,31 @@ export default function CardJob({ job, handlerFindJobNormal }) {
             bg: "red.500",
           }}
         >
-          Processing
+          Fail
+        </Button>
+      );
+    }
+
+    if (job?.status == "success") {
+      return (
+        <Button
+          flex={1}
+          fontSize={"sm"}
+          rounded={"full"}
+          bg={"pink.400"}
+          color={"white"}
+          boxShadow={
+            "0px 1px 25px -5px rgb(66 153 225 / 48%), 0 10px 10px -5px rgb(66 153 225 / 43%)"
+          }
+          _hover={{
+            bg: "pink.500",
+          }}
+          _focus={{
+            bg: "pink.500",
+          }}
+          onClick={()=>handleUpdateJobToDone(job?.id)}
+        >
+          Update Done
         </Button>
       );
     }
@@ -216,7 +254,9 @@ export default function CardJob({ job, handlerFindJobNormal }) {
           )}
         </Stack>
 
-        <Stack mt={8} direction={"row"} spacing={4}>{renderBtn()}</Stack>
+        <Stack mt={8} direction={"row"} spacing={4}>
+          {renderBtn()}
+        </Stack>
       </Box>
     </Center>
   );

@@ -12,7 +12,79 @@ import {
 import CarouselImages from "../widgets/CarouselImages";
 import moment from "moment";
 
-export default function CardJob({ job, handleApply }) {
+export default function CardJob({ job, status }) {
+
+  const renderBtn = () => {
+
+    if (status == "pending") {
+      return (
+      <Button
+        flex={1}
+        fontSize={"sm"}
+        rounded={"full"}
+        bg={"yellow.400"}
+        color={"white"}
+        boxShadow={
+          "0px 1px 25px -5px rgb(66 153 225 / 48%), 0 10px 10px -5px rgb(66 153 225 / 43%)"
+        }
+        _hover={{
+          bg: "yellow.500",
+        }}
+        _focus={{
+          bg: "yellow.500",
+        }}
+      >
+        Pending
+      </Button>)
+    }
+
+    if (status == "approve") {
+      return (
+        <Button
+          flex={1}
+          fontSize={"sm"}
+          rounded={"full"}
+          bg={"green.400"}
+          color={"white"}
+          boxShadow={
+            "0px 1px 25px -5px rgb(66 153 225 / 48%), 0 10px 10px -5px rgb(66 153 225 / 43%)"
+          }
+          _hover={{
+            bg: "green.500",
+          }}
+          _focus={{
+            bg: "green.500",
+          }}
+        >
+          Approve
+        </Button>
+      );
+    }
+
+    if (status == "reject") {
+      return (
+        <Button
+          flex={1}
+          fontSize={"sm"}
+          rounded={"full"}
+          bg={"red.400"}
+          color={"white"}
+          boxShadow={
+            "0px 1px 25px -5px rgb(66 153 225 / 48%), 0 10px 10px -5px rgb(66 153 225 / 43%)"
+          }
+          _hover={{
+            bg: "red.500",
+          }}
+          _focus={{
+            bg: "red.500",
+          }}
+        >
+          Reject
+        </Button>
+      );
+    }
+  };
+
   return (
     <Center py={6}>
       <Box
@@ -76,25 +148,7 @@ export default function CardJob({ job, handleApply }) {
 
         <Stack mt={8} direction={"row"} spacing={4}>
           {
-            <Button
-              flex={1}
-              fontSize={"sm"}
-              onClick={()=>handleApply()}
-              rounded={"full"}
-              bg={"teal.400"}
-              color={"white"}
-              boxShadow={
-                "0px 1px 25px -5px rgb(66 153 225 / 48%), 0 10px 10px -5px rgb(66 153 225 / 43%)"
-              }
-              _hover={{
-                bg: "teal.500",
-              }}
-              _focus={{
-                bg: "teal.500",
-              }}
-            >
-              Apply Job
-            </Button>
+            renderBtn()
           }
         </Stack>
       </Box>
