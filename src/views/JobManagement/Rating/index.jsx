@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useState } from "react";
-import Loader from "../Loader";
+import Loader from "../../Loader";
 import { Col, Empty, Pagination, Row } from "antd";
 import { Container, useToast } from "@chakra-ui/react";
-import api from "../../services/api";
+import api from "../../../services/api";
 import RatingForm from "./RatingForm";
-import { getToast } from "../../utils/toast";
+import { getToast } from "../../../utils/toast";
 
 function RatingPage() {
   const [isLoadingNormal, setIsLoadingNormal] = useState(false);

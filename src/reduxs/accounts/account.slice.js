@@ -5,7 +5,9 @@ import local from "../../utils/localStorage";
 const initialState={
     profile : null,
     roles: [],
-    userModeView:"User"
+    userModeView:"User",
+    webSocketService:null,
+    
 }
 
 export const accountSlice = createSlice({
@@ -23,9 +25,12 @@ export const accountSlice = createSlice({
         },
         setWalletInfo:(state,action) =>{
             state.wallet = action.payload;
+        },
+        setWebSocketService:(state,action) =>{
+            state.webSocketService = action.payload;
         }
     }
 })
 
-export const {getProfile, setWeb3Provider, setRoles, setUserModeView} =accountSlice.actions;
+export const {getProfile, setWeb3Provider, setRoles, setUserModeView, setWebSocketService} =accountSlice.actions;
 export default accountSlice.reducer;

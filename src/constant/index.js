@@ -5,7 +5,7 @@ export const NAV_ITEMS_WORKER = [
         {
           label: "Real Time",
           subLabel: "Find your work realtime",
-          href: "#",
+          href: "/find-jobs/realtime",
         },
         {
           label: "Normal",
@@ -21,10 +21,6 @@ export const NAV_ITEMS_WORKER = [
     {
       label: "Rating",
       href: "/rating",
-    },
-    {
-      label: "History",
-      href: "#",
     },
     {
       label: "About",

@@ -19,6 +19,10 @@ var path = {
 
   getRate: {href:"/api/v1/business-worker/get-rate"},
   rate: {href: '/api/v1/business-worker/rate'},
+  getNumNotifyUnread: {href: '/api/v1/business-worker/get-num-notify-unread'},
+  markAllNotifyRead: {href: '/api/v1/business-worker/mark-all-notify-read'},
+  getNotifyUser: {href: '/api/v1/business-worker/get-notify-user'},
+
 
   createJob: {href: "/api/v1/business/create-job"},
   getJob: {href: "/api/v1/business/get-job"},

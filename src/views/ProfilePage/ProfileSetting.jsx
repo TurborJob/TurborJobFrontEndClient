@@ -25,6 +25,7 @@ import React, { useEffect, useState } from "react";
 import api from "../../services/api";
 import { getToast } from "../../utils/toast";
 import { useAppSelector } from "../../reduxs/hooks";
+import IpPicker from "../widgets/IpPicker";
 
 function ProfileSetting() {
   const { profile } = useAppSelector((state) => state.account);
@@ -34,42 +35,47 @@ function ProfileSetting() {
   const [form] = Form.useForm();
   const [isLoading, setIsLoading] = useState(false);
   const [avatarLink, setAvatarLink] = useState(profile?.avatar);
+  const [ip, setIp] = useState();
 
-  form.setFieldValue("fullName", profile?.fullName)
-  form.setFieldValue("email", profile?.email)
-  form.setFieldValue("phone", profile?.phone)
-  form.setFieldValue("address", profile?.address)
-  form.setFieldValue("gender", profile?.gender)
-  form.setFieldValue("birthday", moment(profile?.birthday))
+  form.setFieldValue("fullName", profile?.fullName);
+  form.setFieldValue("email", profile?.email);
+  form.setFieldValue("phone", profile?.phone);
+  form.setFieldValue("address", profile?.address);
+  form.setFieldValue("gender", profile?.gender);
+  form.setFieldValue("birthday", moment(profile?.birthday));
 
-
-  const handleUpdateProfile = async() => {
+  const handleUpdateProfile = async () => {
     let data = form.getFieldValue();
-    let {address, phone, birthday, gender, fullName, email} = data
+    let { address, phone, birthday, gender, fullName, email } = data;
 
-    if(avatarLink){
-      data.avatar = avatarLink.fileLink
+    if (avatarLink) {
+      data.avatar = avatarLink.fileLink;
     }
 
-    if(address && phone && birthday && gender && fullName && email){
-      birthday = moment(new Date(birthday)).format('DD/MM/yyyy');
+    if (ip) {
+      data.lat = ip.lat;
+      data.lng = ip.lng;
+    }
+
+    if (address && phone && birthday && gender && fullName && email) {
+      birthday = moment(new Date(birthday)).format("DD/MM/yyyy");
       setIsLoading(true);
-      let res = await api.updateProfile({...data,birthday});
-      if(res && !res?.errorMessage){
+      let res = await api.updateProfile({ ...data, birthday });
+      if (res && !res?.errorMessage) {
         toast(getToast("success", res.message, "Success"));
-        if(res?.metadata){
-          local.add("profile",JSON.stringify(res.metadata))
+        if (res?.metadata) {
+          local.add("profile", JSON.stringify(res.metadata));
           location.reload();
         }
       }
       setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div>
       <Stack spacing={4}>
-        <Form form={form} layout={"vertical"} >
+        <Form form={form} layout={"vertical"}>
           <HStack style={{ marginBottom: "20px" }}>
             {uploadAvatar(setAvatarLink)}
           </HStack>
@@ -130,11 +136,14 @@ function ProfileSetting() {
           </Form.Item>
           <Grid templateColumns="repeat(2, 1fr)" gap={6}>
             <Box>
-              <Form.Item label="Gender" name={"gender"} initialValue={profile?.gender}>
+              <Form.Item
+                label="Gender"
+                name={"gender"}
+                initialValue={profile?.gender}
+              >
                 <Select style={{ minWidth: "150px" }} defaultValue={"male"}>
                   <Select.Option value="male">Male</Select.Option>
                   <Select.Option value="female">Female</Select.Option>
-                  <Select.Option value="lgpt">LGPT</Select.Option>
                 </Select>
               </Form.Item>
             </Box>
@@ -149,12 +158,17 @@ function ProfileSetting() {
               </Form.Item>
             </Box>
           </Grid>
+          <Box>
+            <Text>Click in map to choose IP!</Text>
+            <div>{ip ? ip?.lat + ", " + ip?.lng : ""}</div>
+            <IpPicker onChangeValue={setIp} value={ip} />
+          </Box>
           <Stack spacing={10} pt={2}>
             <Button
               type="primary"
               htmlType="submit"
               loading={isLoading}
-                onClick={handleUpdateProfile}
+              onClick={handleUpdateProfile}
             >
               Update
             </Button>
@@ -210,7 +224,12 @@ const uploadAvatar = (setAvatarLink) => {
       if (newFileList && newFileList.length > 0) {
         formData.append("file", newFileList[0].originFileObj);
       }
-      if(fileList && fileList.length > 0 &&  fileList[0]?.originFileObj && newFileList.length > 0){
+      if (
+        fileList &&
+        fileList.length > 0 &&
+        fileList[0]?.originFileObj &&
+        newFileList.length > 0
+      ) {
         const res = await api.uploadFile(formData, headers);
         if (res) {
           newFileList[0].status = "success";

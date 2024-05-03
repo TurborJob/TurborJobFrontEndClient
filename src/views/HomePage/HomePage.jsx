@@ -16,6 +16,7 @@ import {
 import WithSpeechBubbles from '../HomePage/WithSpeechBubbles'
 import Pricing from '../HomePage/Pricing'
 import Statistics from '../HomePage/Statistics'
+import WebSocketComponent from '../widgets/WebSocketComponent'
 
 export default function HomePage() {
   return (

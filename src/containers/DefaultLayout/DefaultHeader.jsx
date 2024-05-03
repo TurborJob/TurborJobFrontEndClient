@@ -24,6 +24,7 @@ import {
   Menu,
   Avatar,
   useToast,
+  Heading,
 } from "@chakra-ui/react";
 import {
   HamburgerIcon,
@@ -40,11 +41,15 @@ import {
   setRoles,
   setUserModeView,
 } from "../../reduxs/accounts/account.slice";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import localStorage from "../../utils/localStorage";
 import { getToast } from "../../utils/toast";
 import { Link } from "react-router-dom";
 import { NAV_ITEMS_BUSINESS, NAV_ITEMS_WORKER } from "../../constant";
+import { FiBell } from "react-icons/fi";
+import { Badge } from "antd";
+import { Badge as BadgeCharka } from "@chakra-ui/react";
+import moment from "moment";
 
 export default function WithSubnavigation() {
   const { profile, userModeView, roles } = useAppSelector(
@@ -53,6 +58,13 @@ export default function WithSubnavigation() {
   const dispatch = useAppDispatch();
   const { isOpen, onToggle } = useDisclosure();
   const { colorMode, toggleColorMode } = useColorMode();
+  const [numNotifyUnread, setNumNotifyUnRead] = useState(0);
+  const [notifyList, setNotifyList] = useState([]);
+  const [notifyPagination, setNotifyPagination] = useState({
+    page: 0,
+    size: 5,
+    maxSizeCurrent: 0,
+  });
 
   const getRoleName = async () => {
     let res = await api.getRoleName();
@@ -61,9 +73,34 @@ export default function WithSubnavigation() {
     }
   };
 
+  const getNotify = async () => {
+    let res = await api.getNumNotifyUnread();
+    let resNotifyList = await api.getNotifyUser(notifyPagination);
+    if (res) {
+      setNumNotifyUnRead(res?.metadata);
+    }
+    if (resNotifyList) {
+      setNotifyList(resNotifyList?.metadata);
+      notifyPagination.maxSizeCurrent = resNotifyList?.metadata?.length;
+      setNotifyPagination(notifyPagination);
+    }
+  };
+
+  const handleMarkAllRead = async () => {
+    await api.markAllNotifyRead();
+    getNotify();
+  };
+
+  const loadMoreNotify = async () => {
+    notifyPagination.page = notifyPagination.page + 1;
+    setNotifyPagination(notifyPagination);
+    getNotify();
+  };
+
   useEffect(() => {
     if (profile) {
       getRoleName();
+      getNotify();
     }
   }, [profile]);
 
@@ -134,12 +171,24 @@ export default function WithSubnavigation() {
             </Button>
           </Stack>
         )}
+        {profile && (
+          <Stack>
+            <NotifyNavItem
+              numNotifyUnread={numNotifyUnread}
+              notifies={notifyList}
+              handleMarkAllRead={handleMarkAllRead}
+              loadMoreNotify={loadMoreNotify}
+              notifyPagination={notifyPagination}
+            />
+          </Stack>
+        )}
 
         <Stack px={{ base: 3 }}>
           <Button onClick={toggleColorMode}>
             {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
           </Button>
         </Stack>
+        <Stack></Stack>
         {profile ? (
           <Stack px={{ base: 3 }}>
             <UserNavItem profile={profile} />
@@ -441,5 +490,66 @@ const UserNavItem = ({ profile }) => {
         <MenuItem onClick={handleLogout}>Logout</MenuItem>
       </MenuList>
     </Menu>
+  );
+};
+
+const NotifyNavItem = ({
+  notifies,
+  numNotifyUnread,
+  handleMarkAllRead,
+  loadMoreNotify,
+  notifyPagination,
+}) => {
+  return (
+    <>
+      <Menu>
+        <MenuButton
+          rounded={"full"}
+          variant={"link"}
+          cursor={"pointer"}
+          minW={0}
+          style={{ margin: "0 10px" }}
+        >
+          <Badge count={numNotifyUnread}>
+            <IconButton icon={<FiBell />} />
+          </Badge>
+        </MenuButton>
+        <MenuList alignItems={"center"} minW={"400px"}>
+          <Stack>
+            {notifies?.map((notify) => (
+              <div
+                key={notify?.id}
+                style={{
+                  border: "1px solid gray",
+                  padding: "2px",
+                  margin: "3px",
+                }}
+              >
+                <Heading as="h5" size="sm">
+                  {notify?.title}{" "}
+                  {!notify?.isRead && (
+                    <BadgeCharka ml="1" colorScheme="green">
+                      New
+                    </BadgeCharka>
+                  )}
+                </Heading>
+                <Text as="i">
+                  {moment(notify?.createAt).format("DD-MM-YYYY")}
+                </Text>
+                <Text fontSize="md">{notify?.content}</Text>
+              </div>
+            ))}
+          </Stack>
+          <MenuItem justifyContent={"center"}>
+            <div onClick={() => handleMarkAllRead()}>mark all read</div>
+          </MenuItem>
+          {notifyPagination?.maxSizeCurrent >= 5 && (
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <button onClick={() => loadMoreNotify()}>more...</button>
+            </div>
+          )}
+        </MenuList>
+      </Menu>
+    </>
   );
 };

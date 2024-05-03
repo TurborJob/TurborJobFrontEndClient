@@ -24,6 +24,7 @@ import { getToast } from "../../utils/toast";
 import moment from "moment";
 import local from "../../utils/localStorage";
 import { useNavigate } from "react-router-dom";
+import IpPicker from "../widgets/IpPicker";
 
 export default function Register() {
   const toast = useToast();
@@ -31,33 +32,62 @@ export default function Register() {
   const [form] = Form.useForm();
   const [isLoading, setIsLoading] = useState(false);
   const [avatarLink, setAvatarLink] = useState(null);
+  const [ip, setIp] = useState();
 
-  const handleRegister = async() => {
+  const handleRegister = async () => {
     let data = form.getFieldValue();
-    let {username, password, address, phone, birthday, gender, fullName, email, firstName, lastName} = data
+    let {
+      username,
+      password,
+      address,
+      phone,
+      birthday,
+      gender,
+      fullName,
+      email,
+      firstName,
+      lastName,
+    } = data;
 
-    if(lastName && firstName){
+    if (lastName && firstName) {
       data.fullName = firstName + " " + lastName;
     }
 
-    if(avatarLink){
-      data.avatar = avatarLink.fileLink
+    if (avatarLink) {
+      data.avatar = avatarLink.fileLink;
     }
 
-    if(username && password && address && phone && birthday && gender && fullName && email){
-      birthday = moment(new Date(birthday)).format('DD/MM/yyyy');
+    if (!ip) {
+      toast(getToast("error", "IP address is require!", "Error"));
+      setIsLoading(false);
+      return;
+    }
+
+    data.lat = ip.lat;
+    data.lng = ip.lng;
+
+    if (
+      username &&
+      password &&
+      address &&
+      phone &&
+      birthday &&
+      gender &&
+      fullName &&
+      email
+    ) {
+      birthday = moment(new Date(birthday)).format("DD/MM/yyyy");
       setIsLoading(true);
-      let res = await api.register({...data,birthday});
-      if(res && !res?.errorMessage){
+      let res = await api.register({ ...data, birthday });
+      if (res && !res?.errorMessage) {
         toast(getToast("success", res.message, "Success"));
-        local.add("accessToken",res.metadata.token)
-        local.add("refreshToken",res.metadata.refreshToken)
-        local.add("profile",JSON.stringify(res.metadata.profile))
-        navigate('/');
+        local.add("accessToken", res.metadata.token);
+        local.add("refreshToken", res.metadata.refreshToken);
+        local.add("profile", JSON.stringify(res.metadata.profile));
+        navigate("/");
       }
       setIsLoading(false);
     }
-
   };
 
   return (
@@ -81,7 +111,9 @@ export default function Register() {
         >
           <Stack spacing={4}>
             <Form form={form} layout={"vertical"}>
-              <HStack style={{ marginBottom: "20px" }}>{uploadAvatar(setAvatarLink)}</HStack>
+              <HStack style={{ marginBottom: "20px" }}>
+                {uploadAvatar(setAvatarLink)}
+              </HStack>
               <Box>
                 <Form.Item
                   label="Username"
@@ -125,7 +157,7 @@ export default function Register() {
                   <Form.Item
                     label="Confirm Password"
                     name="confirmPassword"
-                    dependencies={['password']}
+                    dependencies={["password"]}
                     rules={[
                       {
                         required: true,
@@ -133,10 +165,12 @@ export default function Register() {
                       },
                       ({ getFieldValue }) => ({
                         validator(_, value) {
-                          if (!value || getFieldValue('password') === value) {
+                          if (!value || getFieldValue("password") === value) {
                             return Promise.resolve();
                           }
-                          return Promise.reject(new Error('Confirm Password do not match!'));
+                          return Promise.reject(
+                            new Error("Confirm Password do not match!")
+                          );
                         },
                       }),
                     ]}
@@ -226,7 +260,6 @@ export default function Register() {
                     <Select style={{ minWidth: "150px" }} defaultValue={"male"}>
                       <Select.Option value="male">Male</Select.Option>
                       <Select.Option value="female">Female</Select.Option>
-                      <Select.Option value="lgpt">LGPT</Select.Option>
                     </Select>
                   </Form.Item>
                 </Box>
@@ -237,12 +270,18 @@ export default function Register() {
                     rules={[
                       { required: true, message: "Birthday is require!" },
                     ]}
-                    format={'dd/MM/yyyy'}
+                    format={"dd/MM/yyyy"}
                   >
                     <DatePicker />
                   </Form.Item>
                 </Box>
               </Grid>
+              <Box>
+                <Text color="tomato">IP is require*</Text>
+                <Text>Click in map to choose IP!</Text>
+                <div>{ip ? ip?.lat + ", " + ip?.lng : ""}</div>
+                <IpPicker onChangeValue={setIp} value={ip} />
+              </Box>
               <Stack spacing={10} pt={2}>
                 <Button
                   type="primary"
@@ -262,10 +301,18 @@ export default function Register() {
                 </Link>
               </Text>
             </Stack>
-            <UnorderedList style={{fontSize:"small", fontWeight:"lighter"}}>
-              <ListItem>Username must have a length of 6 to 20 characters.</ListItem>
-              <ListItem>Password must contain uppercase letters, lowercase letters, numbers, special characters, and be at least 8 characters long.</ListItem>
-              <ListItem>Phone numbers for Vietnamese carriers must be either 10 or 11 digits long.</ListItem>
+            <UnorderedList style={{ fontSize: "small", fontWeight: "lighter" }}>
+              <ListItem>
+                Username must have a length of 6 to 20 characters.
+              </ListItem>
+              <ListItem>
+                Password must contain uppercase letters, lowercase letters,
+                numbers, special characters, and be at least 8 characters long.
+              </ListItem>
+              <ListItem>
+                Phone numbers for Vietnamese carriers must be either 10 or 11
+                digits long.
+              </ListItem>
             </UnorderedList>
           </Stack>
         </Box>
@@ -305,7 +352,7 @@ const uploadAvatar = (setAvatarLink) => {
       toast(getToast("File too big!"));
       return;
     } else {
-      console.log('newFileList.size',newFileList.size)
+      console.log("newFileList.size", newFileList.size);
       const headers = {
         "Content-Type": "multipart/form-data",
       };
@@ -313,11 +360,11 @@ const uploadAvatar = (setAvatarLink) => {
       if (newFileList && newFileList.length > 0) {
         formData.append("file", newFileList[0].originFileObj);
       }
-      if(fileList && fileList?.originFileObj){
+      if (fileList && fileList?.originFileObj) {
         const res = await api.uploadFile(formData, headers);
         if (res) {
           newFileList[0].status = "success";
-          setAvatarLink(res.metadata)
+          setAvatarLink(res.metadata);
         }
       }
     }

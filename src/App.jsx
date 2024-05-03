@@ -1,15 +1,27 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import routes from "./routers/";
 
 import "./styles/style.css";
-import {DefaultLayout} from "./containers/DefaultLayout/index";
-import React from "react";
+import { DefaultLayout } from "./containers/DefaultLayout/index";
+import React, { useEffect } from "react";
 import Loader from "./views/Loader";
-import NotFound from './views/NotFound';
-import { useAppSelector } from './reduxs/hooks';
+import NotFound from "./views/NotFound";
+import { useAppDispatch, useAppSelector } from "./reduxs/hooks";
+import WebSocketService from "./services/webSocket";
+import { setWebSocketService } from "./reduxs/accounts/account.slice";
 
 function App() {
   const { userModeView } = useAppSelector((state) => state.account);
+  const dispatch = useAppDispatch();
+  
+  useEffect(() => {
+    const webSocketService = new WebSocketService();
+    webSocketService.connect();
+    dispatch(setWebSocketService(webSocketService));
+    return () => {
+      webSocketService.disconnect();
+    };
+  }, []);
 
   return (
     <>
@@ -28,8 +40,8 @@ function App() {
               if (route.layout === null) {
                 Layout = React.Fragment;
               }
-              if(route?.role && !(route.role == userModeView)){
-                Page = NotFound
+              if (route?.role && !(route.role == userModeView)) {
+                Page = NotFound;
               }
               return (
                 <Route

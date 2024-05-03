@@ -58,26 +58,6 @@ function ListRequestForms() {
     setAction(action);
   };
 
-  const handleApprove = async (jobId) => {
-    setIsLoadingNormal(true);
-    // const res = await api.approveNormalJob({jobId});
-    // if(res){
-    //   toast(getToast("success", res?.metadata, "Success"));
-    //   fetch()
-    // }
-    setIsLoadingNormal(false);
-  };
-
-  const handleReject = async (jobId) => {
-    setIsLoadingNormal(true);
-    // const res = await api.rejectNormalJob({jobId});
-    // if(res){
-    //   toast(getToast("success", res?.metadata, "Success"));
-    //   fetch()
-    // }
-    setIsLoadingNormal(false);
-  };
-
   const handleConfirm = async () => {
     setIsLoadingNormal(true);
     let jobId = parseInt(location.hash.replace(/^#/, ""));

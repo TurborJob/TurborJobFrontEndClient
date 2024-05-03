@@ -12,9 +12,19 @@ import {
 import CarouselImages from "../../widgets/CarouselImages";
 import moment from "moment";
 import { Link, useNavigate } from "react-router-dom";
+import { useAppSelector } from "../../../reduxs/hooks";
 
 export default function CardJob({ job, handlerFindJobNormal, handleUpdateJobToDone}) {
+  const { profile, webSocketService } = useAppSelector(
+    (state) => state.account
+  );
   const navigate = useNavigate();
+
+  const handleFindNow = () => {
+    if(profile && profile?.id && webSocketService){
+      webSocketService.sendMessageFindJob(profile?.id, job?.id,"Request find job now")
+    }
+  }
 
   const renderStatus = () => {
     // inactive, processing, success, done, fail.
@@ -89,6 +99,7 @@ export default function CardJob({ job, handlerFindJobNormal, handleUpdateJobToDo
             _focus={{
               bg: "blue.500",
             }}
+            onClick={handleFindNow}
           >
             Find now
           </Button>

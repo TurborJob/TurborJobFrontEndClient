@@ -22,7 +22,7 @@ const IpPicker = ({onChangeValue, value}) => {
 
   return (
     <div style={{ height: '400px' }}>
-      <MapContainer center={[16.0544, 108.2022]} zoom={6} style={{ height: '100%'}}>
+      <MapContainer center={[16.0544, 108.2022]} zoom={6} style={{ height: '100%'}} value={value || null}>
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

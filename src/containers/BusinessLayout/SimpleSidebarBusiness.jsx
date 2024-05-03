@@ -25,8 +25,8 @@ const LinkItems = [
   { name: "Home", icon: FiHome, href: "../job-management/home" },
   { name: "Create", icon: FiPlus, href: "../job-management/create" },
   { name: "List Jobs", icon: FiList, href: "../job-management/list" },
-  { name: "History", icon: FiClipboard, href: "../job-management/history" },
-  { name: "Rating List", icon: FiStar, href: "../job-management/rate" },
+  // { name: "Notify History", icon: FiClipboard, href: "../job-management/notify-history" },
+  { name: "Rating List", icon: FiStar, href: "../job-management/rating" },
 ];
 
 export default function SimpleSidebarBusiness() {
