@@ -80,29 +80,28 @@ class WebSocketService {
   subscribeToGetRequestUpdateJob(callback) {
     if (this.stompClient && this.stompClient.connected) {
         this.stompClient.subscribe("/topic/request-update-job-runtime",(response) => {
-            console.log('hiho')
           const message = JSON.parse(response.body);
           callback(message);
         });
     }
   }
 
-  // get jobs
+  // get apply jobs
 
-  sendPrivateMessageGetJob(senderId, recipientId, messageContent) {
+  sendPrivateToRequestApplyJob(senderId ,jobId, messageContent) {
     if (this.stompClient && this.stompClient.connected) {
-      const privateChannel = `/app/private-message/get-job/${recipientId}`;
+      const privateChannel = `/app/private-message/send-request-apply-job/${jobId}`;
       this.stompClient.send(
         privateChannel,
         {},
-        JSON.stringify({ senderId: senderId, content: messageContent })
+        JSON.stringify({ sender: senderId, content: messageContent })
       );
     }
   }
 
-  subscribeToPrivateMessagesJob(recipientId, callback) {
+  subscribePrivateGetRequestApplyJob(recipientId, jobId, callback) {
     if (this.stompClient && this.stompClient.connected) {
-      const privateChannel = `/topic/private-message/get-job/${recipientId}`;
+      const privateChannel = `/topic/private-message/get-request-apply-job/${jobId}`;
       this.stompClient.subscribe(privateChannel, (response) => {
         const message = JSON.parse(response.body);
         callback(message);

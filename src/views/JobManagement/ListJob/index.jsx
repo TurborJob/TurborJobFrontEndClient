@@ -3,29 +3,76 @@ import React, { useCallback, useEffect, useState } from "react";
 import CardJob from "./CardJob";
 import api from "../../../services/api";
 import { getToast } from "../../../utils/toast";
-import { useToast } from "@chakra-ui/react";
+import {
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  useDisclosure,
+  useToast,
+} from "@chakra-ui/react";
+import { useAppSelector } from "../../../reduxs/hooks";
+import UserProfileCard from "../ListRequestForms/UserProfileCard";
+import Loader from "../../Loader";
 
 function ListJob() {
-  const [jobs, setJobs] = useState([]);
-  const [pagination, setPagination] = useState({ page: 0, size: 10, total: 0 });
-
+  // Component, System
+  const { webSocketService, profile } = useAppSelector(
+    (state) => state.account
+  );
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
   const [isLoadingNormal, setIsLoadingNormal] = useState(false);
+  const [pagination, setPagination] = useState({ page: 0, size: 10, total: 0 });
 
-  const fetch = useCallback(async (page = 0, size = 10) => {
+  // Jobs
+  const [jobs, setJobs] = useState([]);
+  const [jobFocus, setJobFocus] = useState();
+
+  // Request Apply
+  const [users, setUsers] = useState([]);
+
+  // Start Fetch
+  const fetch = useCallback(async (isLoading = true,page = 0, size = 10) => {
+    setIsLoadingNormal(isLoading);
     const res = await api.getJob({ page, size });
     if (res) {
       setJobs(res?.metadata?.jobs);
       setPagination({ ...pagination, total: res?.metadata?.total });
     }
+    setIsLoadingNormal(false);
   }, []);
 
   useEffect(() => {
     fetch();
   }, []);
+  // End Fetch
+
+  const getApplyRequest = async (jobId, page = 0, size = 30) => {
+    const res = await api.getRequestNormalJobBusiness({ page, size, jobId });
+    if (res) {
+      setUsers(res?.metadata?.users);
+    }
+  };
+
+  useEffect(() => {
+    if (profile && profile?.id && webSocketService && jobFocus) {
+      webSocketService.subscribePrivateGetRequestApplyJob(
+        profile?.id,
+        jobFocus?.id,
+        (message) => {
+          if (message?.isSuccess) {
+            getApplyRequest(jobFocus?.id);
+          }
+        }
+      );
+    }
+  }, [jobFocus]);
 
   const onChangePagination = (page, pageSize) => {
-    fetch(page - 1, pageSize);
+    fetch(true ,page - 1, pageSize);
   };
 
   const handlerFindJobNormal = async (jobId) => {
@@ -33,7 +80,7 @@ function ListJob() {
     const res = await api.findNormalJob({ jobId });
     if (res) {
       toast(getToast("success", res?.metadata, "Success"));
-      fetch();
+      fetch(true);
     }
     setIsLoadingNormal(false);
   };
@@ -43,16 +90,57 @@ function ListJob() {
     const res = await api.updateJobToDone({ jobId });
     if (res) {
       toast(getToast("success", res?.metadata, "Success"));
-      fetch();
+      fetch(true);
     }
     setIsLoadingNormal(false);
   };
 
-  return (
+  const handleRequestApply = async (action, userReqId) => {
+    let res = null;
+    if (action == "approve") {
+      res = await api.approveNormalJob({
+        jobId: jobFocus?.id,
+        userReqId,
+        description: "Approve request!",
+      });
+    }
+    if (action == "reject") {
+      res = await api.rejectNormalJob({
+        jobId: jobFocus?.id,
+        userReqId,
+        description: "Approve request!",
+      });
+    }
+
+    if (res) {
+      toast(getToast("success", res?.metadata, "Success"));
+      let checkJob = await api.checkJobSuccess({ jobId: jobFocus?.id });
+      if (checkJob?.metadata) {
+        onClose();
+        fetch(true);
+        return;
+      }
+      getApplyRequest(jobFocus?.id);
+    }
+
+    return;
+  };
+
+  return isLoadingNormal ? (
+    <div style={{ marginTop: "30px" }}>
+      <Loader />
+    </div>
+  ) : (
     <div style={{ padding: 20 }}>
       <Row></Row>
       <Row gutter={[12, 12]}>
-        {jobs.length == 0 ? <Col style={{marginTop:'100px'}} span={24}><Empty /></Col> : ""}
+        {jobs.length == 0 ? (
+          <Col style={{ marginTop: "100px" }} span={24}>
+            <Empty />
+          </Col>
+        ) : (
+          ""
+        )}
         {jobs?.map((job, index) => (
           <Col
             xxs={24}
@@ -68,6 +156,8 @@ function ListJob() {
               job={job}
               handlerFindJobNormal={handlerFindJobNormal}
               handleUpdateJobToDone={handleUpdateJobToDone}
+              openModalFindNow={() => onOpen()}
+              setJobFocus={setJobFocus}
             />
           </Col>
         ))}
@@ -80,6 +170,55 @@ function ListJob() {
           showSizeChanger
         />
       </Row>
+
+      <Modal
+        blockScrollOnMount={false}
+        isOpen={isOpen}
+        onClose={onClose}
+        scrollBehavior={"inside"}
+        size={"xxl"}
+      >
+        <ModalOverlay
+          bg="none"
+          backdropFilter="auto"
+          backdropInvert="80%"
+          backdropBlur="2px"
+        />
+        <ModalContent style={{ width: "70%" }}>
+          <ModalHeader>List Request Find Now</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Row gutter={[12, 12]}>
+              {users.length == 0 ? (
+                <Col style={{ marginTop: "100px" }} span={24}>
+                  <Empty />
+                </Col>
+              ) : (
+                ""
+              )}
+              {users?.map((user) => (
+                <Col
+                  xxs={24}
+                  xs={24}
+                  sm={24}
+                  md={24}
+                  lg={12}
+                  xl={8}
+                  xxl={8}
+                  key={user?.id}
+                >
+                  <UserProfileCard
+                    user={user}
+                    handleRequestApply={(action) => {
+                      handleRequestApply(action, user.id);
+                    }}
+                  />
+                </Col>
+              ))}
+            </Row>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </div>
   );
 }

@@ -1,9 +1,10 @@
 import {createSlice } from "@reduxjs/toolkit";
 import local from "../../utils/localStorage";
+import localStorage from "../../utils/localStorage";
 
 
 const initialState={
-    profile : null,
+    profile : localStorage.get("profile") ? localStorage.get("profile") : "",
     roles: [],
     userModeView:"User",
     webSocketService:null,

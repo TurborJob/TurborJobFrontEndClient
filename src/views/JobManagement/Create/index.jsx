@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Col,
@@ -27,10 +27,12 @@ function CreateJobPage() {
   const [images, setImages] = useState([]);
   const [ip, setIp] = useState();
 
-  form.setFieldValue("quantityWorker", 1);
-  form.setFieldValue("isVehicle", false);
-  form.setFieldValue("gender", "all");
-  form.setFieldValue("salary", 0);
+  useEffect(() => {
+    form.setFieldValue("quantityWorker", 1);
+    form.setFieldValue("isVehicle", false);
+    form.setFieldValue("gender", "all");
+    form.setFieldValue("salary", 0);
+  }, [form]);
 
   const handleCreateJob = async () => {
     setIsLoading(true);

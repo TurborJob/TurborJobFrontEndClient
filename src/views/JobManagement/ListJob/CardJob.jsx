@@ -13,8 +13,12 @@ import CarouselImages from "../../widgets/CarouselImages";
 import moment from "moment";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../../reduxs/hooks";
+import { useState } from "react";
 
-export default function CardJob({ job, handlerFindJobNormal, handleUpdateJobToDone}) {
+export default function CardJob({ job, handlerFindJobNormal, handleUpdateJobToDone, openModalFindNow, setJobFocus}) {
+
+  const [jobState, setJobState] = useState(job);
+
   const { profile, webSocketService } = useAppSelector(
     (state) => state.account
   );
@@ -23,54 +27,57 @@ export default function CardJob({ job, handlerFindJobNormal, handleUpdateJobToDo
   const handleFindNow = () => {
     if(profile && profile?.id && webSocketService){
       webSocketService.sendMessageFindJob(profile?.id, job?.id,"Request find job now")
+      openModalFindNow()
+      job.status = "processing"
+      setJobFocus(job)
     }
   }
 
   const renderStatus = () => {
     // inactive, processing, success, done, fail.
-    if (job?.status == "inactive") {
+    if (jobState?.status == "inactive") {
       return (
         <Badge fontWeight={"800"} variant="solid" colorScheme="red">
-          {job.status}
+          {jobState.status}
         </Badge>
       );
     }
 
-    if (job?.status == "processing") {
+    if (jobState?.status == "processing") {
       return (
         <Badge fontWeight={"800"} variant="solid" colorScheme="blue">
-          {job.status}
+          {jobState.status}
         </Badge>
       );
     }
 
-    if (job?.status == "done") {
+    if (jobState?.status == "done") {
       return (
         <Badge fontWeight={"800"} variant="solid" colorScheme="green">
-          {job.status}
+          {jobState.status}
         </Badge>
       );
     }
 
-    if (job?.status == "success") {
+    if (jobState?.status == "success") {
       return (
         <Badge fontWeight={"800"} variant="solid" colorScheme="teal">
-          {job.status}
+          {jobState.status}
         </Badge>
       );
     }
 
-    if (job?.status == "fail") {
+    if (jobState?.status == "fail") {
       return (
         <Badge fontWeight={"800"} variant="solid" colorScheme="purple">
-          {job.status}
+          {jobState.status}
         </Badge>
       );
     }
   };
 
   const renderBtn = () => {
-    if (job?.status == "inactive") {
+    if (jobState?.status == "inactive") {
       return (
         <>
           <Button
@@ -80,7 +87,7 @@ export default function CardJob({ job, handlerFindJobNormal, handleUpdateJobToDo
             _focus={{
               bg: "gray.200",
             }}
-            onClick={() => handlerFindJobNormal(job?.id)}
+            onClick={() => handlerFindJobNormal(jobState?.id)}
           >
             Find
           </Button>
@@ -107,7 +114,7 @@ export default function CardJob({ job, handlerFindJobNormal, handleUpdateJobToDo
       );
     }
 
-    if (job?.status == "processing") {
+    if (jobState?.status == "processing") {
       return (
         <Button
           flex={1}
@@ -125,14 +132,14 @@ export default function CardJob({ job, handlerFindJobNormal, handleUpdateJobToDo
           _focus={{
             bg: "blue.500",
           }}
-          onClick={() => navigate(`../request-form#${job?.id}`)}
+          onClick={() => navigate(`../request-form#${jobState?.id}`)}
         >
           Request form
         </Button>
       );
     }
 
-    if (job?.status == "done") {
+    if (jobState?.status == "done") {
       return (
         <Button
           flex={1}
@@ -155,7 +162,7 @@ export default function CardJob({ job, handlerFindJobNormal, handleUpdateJobToDo
       );
     }
 
-    if (job?.status == "fail") {
+    if (jobState?.status == "fail") {
       return (
         <Button
           flex={1}
@@ -178,7 +185,7 @@ export default function CardJob({ job, handlerFindJobNormal, handleUpdateJobToDo
       );
     }
 
-    if (job?.status == "success") {
+    if (jobState?.status == "success") {
       return (
         <Button
           flex={1}

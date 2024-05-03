@@ -24,7 +24,7 @@ import {
   import Loader from "../Loader";
 
 function FindJobsRealTime() {
-  const { webSocketService } = useAppSelector((state) => state.account);
+  const { webSocketService, profile } = useAppSelector((state) => state.account);
   const [jobs, setJobs] = useState([]);
   const [pagination, setPagination] = useState({ page: 0, size: 10, total: 0 });
   const [jobIdConfirm, setJobIdConfirm] = useState();
@@ -37,13 +37,15 @@ function FindJobsRealTime() {
 
   useEffect(() => {
     webSocketService.subscribeToGetRequestUpdateJob((message) => {
-      console.log("message",message);
+      if(message?.isSuccess){
+        fetch(0,10,false)
+      }
     });
     fetch()
   }, []);
 
 
-  const fetch = useCallback(async (page = 0, size = 10) => {
+  const fetch = useCallback(async (page = 0, size = 10, isLoading = true) => {
     const location = window.navigator && window.navigator.geolocation;
 
     if (location) {
@@ -53,7 +55,7 @@ function FindJobsRealTime() {
             lat: position.coords.latitude,
             long: position.coords.longitude,
           };
-          setIsLoadingNormal(true);
+          setIsLoadingNormal(isLoading);
           const res = await api.getNormalJob({ page, size, ...geolocation });
           if (res) {
             setJobs(res?.metadata?.jobs);
@@ -68,8 +70,12 @@ function FindJobsRealTime() {
     }
   }, []);
 
-  const handlerApplyJobNormal = async () => {
+  const handlerApplyJobRunTime = async () => {
     setIsLoadingNormal(true);
+    if(!profile || !profile?.id || !webSocketService){
+      toast(getToast("error", "You don't have permission!", "Error"));
+      return;
+    }
     if (!jobIdConfirm || !descConfirm) {
       toast(getToast("error", "Invalid Parameter", "Error"));
       return;
@@ -78,9 +84,11 @@ function FindJobsRealTime() {
       jobId: jobIdConfirm,
       description: descConfirm,
     });
+
+    webSocketService.sendPrivateToRequestApplyJob(profile?.id, jobIdConfirm, "Request Apply job!")
     if (res) {
       toast(getToast("success", res?.metadata, "Success"));
-      fetch();
+      fetch(0,10,false);
     }
     onClose();
     setIsLoadingNormal(false);
@@ -132,7 +140,7 @@ function FindJobsRealTime() {
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="blue" onClick={handlerApplyJobNormal}>
+            <Button colorScheme="blue" onClick={handlerApplyJobRunTime}>
               Confirm
             </Button>
           </ModalFooter>

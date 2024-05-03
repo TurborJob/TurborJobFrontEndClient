@@ -30,10 +30,8 @@ var path = {
   approveNormalJob: {href: "/api/v1/business/approve-normal-job"},
   rejectNormalJob: {href: "/api/v1/business/reject-normal-job"},
   getRequestNormalJobBusiness: {href: "/api/v1/business/get-request-normal-job"},
-  updateJobToDone: {href: "/api/v1/business/update-job-done"}
-
-
- 
+  updateJobToDone: {href: "/api/v1/business/update-job-done"},
+  checkJobSuccess: {href: "/api/v1/business/check-job-success"},
 
   // logout: "/api/user/logout",
   // getCaptcha: "/api/user/create-captcha",
