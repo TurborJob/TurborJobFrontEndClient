@@ -49,11 +49,13 @@ export default function CardJob({ job, handleApply }) {
           color={useColorModeValue("tomato.700", "tomato.400")}
           px={3}
         >
-          {job?.startDate &&
-            job?.dueDate &&
-            moment(job.startDate).format("DD/MM/YYYY") +
-              " - " +
-              moment(job.dueDate).format("DD/MM/YYYY")}
+          {job?.startDate && job?.dueDate && (
+            <>
+              <div>from: {moment(job.startDate).format("DD/MM/YYYY HH:mm:ss")}</div>
+
+              <div>to: {moment(job.dueDate).format("DD/MM/YYYY HH:mm:ss")}</div>
+            </>
+          )}
         </Text>
 
         <Stack align={"center"} justify={"center"} direction={"row"} mt={6}>

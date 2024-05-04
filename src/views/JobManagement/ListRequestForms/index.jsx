@@ -19,8 +19,12 @@ import {
 } from "@chakra-ui/react";
 import { useLocation } from "react-router-dom";
 import Loader from "../../Loader";
+import { useAppSelector } from "../../../reduxs/hooks";
 
 function ListRequestForms() {
+  const { webSocketService, profile } = useAppSelector(
+    (state) => state.account
+  );
   const location = useLocation();
   const [users, setUsers] = useState([]);
   const [userReqId, setUserReqId] = useState(null);
@@ -78,6 +82,9 @@ function ListRequestForms() {
     }
     if (res) {
       toast(getToast("success", res?.metadata, "Success"));
+      if(webSocketService && profile && profile?.id){
+        webSocketService.sendPrivateRequestUpdateNotify(userReqId, profile?.id, "Send request update notify");
+      }
       fetch();
     }
     setIsLoadingNormal(false);

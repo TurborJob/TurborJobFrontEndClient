@@ -108,6 +108,29 @@ class WebSocketService {
       });
     }
   }
+
+  // get request update notify
+
+  subscribePrivateGetRequestUpdateNotify(userId, callback) {
+    if (this.stompClient && this.stompClient.connected) {
+      const privateChannel = `/topic/private-message/get-request-update-notify/${userId}`;
+      this.stompClient.subscribe(privateChannel, (response) => {
+        const message = JSON.parse(response.body);
+        callback(message);
+      });
+    }
+  }
+
+  sendPrivateRequestUpdateNotify(recipientId, senderId, messageContent, jobId) {
+    if (this.stompClient && this.stompClient.connected) {
+      const privateChannel = `/app/private-message/send-request-update-notify/${recipientId}`;
+      this.stompClient.send(
+        privateChannel,
+        {},
+        JSON.stringify({ sender: senderId, content: messageContent, jobId: jobId })
+      );
+    }
+  }
 }
 
 export default WebSocketService;

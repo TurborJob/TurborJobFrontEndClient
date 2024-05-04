@@ -15,8 +15,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../../reduxs/hooks";
 import { useState } from "react";
 
-export default function CardJob({ job, handlerFindJobNormal, handleUpdateJobToDone, openModalFindNow, setJobFocus}) {
-
+export default function CardJob({
+  job,
+  handlerFindJobNormal,
+  handleUpdateJobToDone,
+  openModalFindNow,
+  setJobFocus,
+}) {
   const [jobState, setJobState] = useState(job);
 
   const { profile, webSocketService } = useAppSelector(
@@ -25,13 +30,17 @@ export default function CardJob({ job, handlerFindJobNormal, handleUpdateJobToDo
   const navigate = useNavigate();
 
   const handleFindNow = () => {
-    if(profile && profile?.id && webSocketService){
-      webSocketService.sendMessageFindJob(profile?.id, job?.id,"Request find job now")
-      openModalFindNow()
-      job.status = "processing"
-      setJobFocus(job)
+    if (profile && profile?.id && webSocketService) {
+      webSocketService.sendMessageFindJob(
+        profile?.id,
+        job?.id,
+        "Request find job now"
+      );
+      openModalFindNow();
+      job.status = "processing";
+      setJobFocus(job);
     }
-  }
+  };
 
   const renderStatus = () => {
     // inactive, processing, success, done, fail.
@@ -202,7 +211,7 @@ export default function CardJob({ job, handlerFindJobNormal, handleUpdateJobToDo
           _focus={{
             bg: "pink.500",
           }}
-          onClick={()=>handleUpdateJobToDone(job?.id)}
+          onClick={() => handleUpdateJobToDone(job?.id)}
         >
           Update Done
         </Button>
@@ -245,12 +254,17 @@ export default function CardJob({ job, handlerFindJobNormal, handleUpdateJobToDo
           textAlign={"center"}
           color={useColorModeValue("tomato.700", "tomato.400")}
           px={3}
+          fontSize={14}
         >
-          {job?.startDate &&
-            job?.dueDate &&
-            moment(job.startDate).format("DD/MM/YYYY") +
-              " - " +
-              moment(job.dueDate).format("DD/MM/YYYY")}
+          {job?.startDate && job?.dueDate && (
+            <>
+              <div>
+                from: {moment(job.startDate).format("DD/MM/YYYY HH:mm:ss")}
+              </div>
+
+              <div>to: {moment(job.dueDate).format("DD/MM/YYYY HH:mm:ss")}</div>
+            </>
+          )}
         </Text>
 
         <Stack align={"center"} justify={"center"} direction={"row"} mt={6}>

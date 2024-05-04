@@ -7,7 +7,7 @@ const initialState={
     profile : localStorage.get("profile") ? localStorage.get("profile") : "",
     roles: [],
     userModeView:"User",
-    webSocketService:null,
+    webSocketService: null,
     
 }
 

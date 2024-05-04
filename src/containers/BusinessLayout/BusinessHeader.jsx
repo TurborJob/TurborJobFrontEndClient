@@ -22,6 +22,7 @@ import {
   Menu,
   Avatar,
   useToast,
+  Heading,
 } from "@chakra-ui/react";
 import {
   HamburgerIcon,
@@ -38,23 +39,90 @@ import {
   setRoles,
   setUserModeView,
 } from "../../reduxs/accounts/account.slice";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import localStorage from "../../utils/localStorage";
 import { getToast } from "../../utils/toast";
 import { Link } from "react-router-dom";
 import { NAV_ITEMS_BUSINESS, NAV_ITEMS_WORKER } from "../../constant";
+import { FiBell } from "react-icons/fi";
+import moment from "moment";
+import { Badge as BadgeCharka } from "@chakra-ui/react";
+import { Badge } from "antd";
+
 
 export default function WithSubnavigation() {
-  const { profile, userModeView, roles } = useAppSelector(
+  const { profile, userModeView, roles, webSocketService } = useAppSelector(
     (state) => state.account
   );
   const dispatch = useAppDispatch();
   const { isOpen, onToggle } = useDisclosure();
   const { colorMode, toggleColorMode } = useColorMode();
 
+  const [numNotifyUnread, setNumNotifyUnRead] = useState(0);
+  const [notifyList, setNotifyList] = useState([]);
+  const [notifyPagination, setNotifyPagination] = useState({
+    page: 0,
+    size: 5,
+    maxSizeCurrent: 0,
+  });
+
   useEffect(() => {
     dispatch(getProfile());
   }, []);
+
+  useEffect(() => {
+    if (profile && profile?.id) {
+      getNotifyNum();
+    }
+  }, [profile]);
+
+  useEffect(() => {
+    if (webSocketService && profile && profile?.id) {
+      webSocketService.subscribePrivateGetRequestUpdateNotify(
+        profile?.id,
+        (message) => {
+          if (message && message?.isSuccess) {
+            getNotifyNum();
+          }
+        }
+      );
+    }
+  }, [webSocketService, profile]);
+
+  const getNotifyNum = async () => {
+    let res = await api.getNumNotifyUnread();
+    if (res) {
+      setNumNotifyUnRead(res?.metadata);
+    }
+  };
+
+  const getNotifyList = async () => {
+    let resNotifyList = await api.getNotifyUser(notifyPagination);
+    if (resNotifyList) {
+      setNotifyList(resNotifyList?.metadata);
+      notifyPagination.maxSizeCurrent = resNotifyList?.metadata?.length;
+      setNotifyPagination(notifyPagination);
+    }
+  };
+
+  const handleMarkAllRead = async () => {
+    await api.markAllNotifyRead();
+    getNotifyList();
+  };
+
+  const loadMoreNotify = async () => {
+    notifyPagination.page = notifyPagination.page + 1;
+    setNotifyPagination(notifyPagination);
+    getNotifyList();
+  };
+
+  const loadBackNotify = async () => {
+    if (notifyPagination?.page && notifyPagination.page > 0) {
+      notifyPagination.page = notifyPagination.page - 1;
+      setNotifyPagination(notifyPagination);
+      getNotifyList();
+    }
+  };
 
   return (
     <Box position={"fixed"} width={"100%"} zIndex={99}>
@@ -117,6 +185,20 @@ export default function WithSubnavigation() {
             >
               Business View
             </Button>
+          </Stack>
+        )}
+
+        {profile && (
+          <Stack>
+            <NotifyNavItem
+              numNotifyUnread={numNotifyUnread}
+              notifies={notifyList}
+              handleMarkAllRead={handleMarkAllRead}
+              loadMoreNotify={loadMoreNotify}
+              loadBackNotify={loadBackNotify}
+              notifyPagination={notifyPagination}
+              getNotifyList={getNotifyList}
+            />
           </Stack>
         )}
 
@@ -424,5 +506,76 @@ const UserNavItem = ({ profile }) => {
         <MenuItem onClick={handleLogout}>Logout</MenuItem>
       </MenuList>
     </Menu>
+  );
+};
+
+const NotifyNavItem = ({
+  notifies,
+  numNotifyUnread,
+  handleMarkAllRead,
+  loadMoreNotify,
+  loadBackNotify,
+  notifyPagination,
+  getNotifyList,
+}) => {
+  return (
+    <>
+      <Menu>
+        <MenuButton
+          rounded={"full"}
+          variant={"link"}
+          cursor={"pointer"}
+          minW={0}
+          style={{ margin: "0 10px" }}
+          onClick={getNotifyList}
+        >
+          <Badge count={numNotifyUnread}>
+            <IconButton icon={<FiBell />} />
+          </Badge>
+        </MenuButton>
+        <MenuList alignItems={"center"} minW={"400px"}>
+          <Stack>
+            {notifies?.map((notify) => (
+              <div
+                key={notify?.id}
+                style={{
+                  border: "1px solid gray",
+                  padding: "2px",
+                  margin: "3px",
+                }}
+              >
+                <Heading as="h5" size="sm">
+                  {notify?.title}{" "}
+                  {!notify?.isRead && (
+                    <BadgeCharka ml="1" colorScheme="green">
+                      New
+                    </BadgeCharka>
+                  )}
+                </Heading>
+                <Text as="i">
+                  {moment(notify?.createAt).format("DD-MM-YYYY")}
+                </Text>
+                <Text fontSize="md">{notify?.content}</Text>
+              </div>
+            ))}
+          </Stack>
+          <MenuItem justifyContent={"center"}>
+            <div onClick={() => handleMarkAllRead()}>mark all read</div>
+          </MenuItem>
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            {notifyPagination?.maxSizeCurrent >= 5 && (
+              <Button variant="ghost" onClick={() => loadMoreNotify()}>
+                more...
+              </Button>
+            )}
+            {notifyPagination?.page > 0 && (
+              <Button variant="ghost" onClick={() => loadBackNotify()}>
+                back
+              </Button>
+            )}
+          </div>
+        </MenuList>
+      </Menu>
+    </>
   );
 };

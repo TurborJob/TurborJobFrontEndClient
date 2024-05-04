@@ -17,7 +17,6 @@ import IpPicker from "../../widgets/IpPicker";
 import TextArea from "antd/es/input/TextArea";
 import { getToast } from "../../../utils/toast";
 import api from "../../../services/api";
-import moment from "moment";
 const { RangePicker } = DatePicker;
 
 function CreateJobPage() {
@@ -42,8 +41,8 @@ function CreateJobPage() {
     let { rangeTime } = data;
 
     if (rangeTime) {
-      data.startDate = rangeTime[0].format("YYYY-MM-DD");
-      data.dueDate = rangeTime[1].format("YYYY-MM-DD");
+      data.startDate = rangeTime[0].format("YYYY-MM-DD HH:mm:ss");
+      data.dueDate = rangeTime[1].format("YYYY-MM-DD HH:mm:ss");
       delete data.rangeTime;
     }
 
@@ -154,7 +153,7 @@ function CreateJobPage() {
                 <Form.Item
                   name="rangeTime"
                   label={<Text>Start Date - Due Date</Text>}
-                  format={"dd/MM/YYYY"}
+                  format={"YYYY-MM-DD HH:mm:ss"}
                   rules={[
                     {
                       required: true,
@@ -163,7 +162,8 @@ function CreateJobPage() {
                   ]}
                 >
                   <RangePicker
-                    format="DD/MM/YYYY"
+                    format="YYYY-MM-DD HH:mm:ss"
+                    showTime
                     disabledDate={disabledDateCurrent}
                   />
                 </Form.Item>

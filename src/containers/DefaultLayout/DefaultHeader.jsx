@@ -52,7 +52,7 @@ import { Badge as BadgeCharka } from "@chakra-ui/react";
 import moment from "moment";
 
 export default function WithSubnavigation() {
-  const { profile, userModeView, roles } = useAppSelector(
+  const { profile, userModeView, roles, webSocketService } = useAppSelector(
     (state) => state.account
   );
   const dispatch = useAppDispatch();
@@ -73,36 +73,57 @@ export default function WithSubnavigation() {
     }
   };
 
-  const getNotify = async () => {
+  const getNotifyNum = async () => {
     let res = await api.getNumNotifyUnread();
-    let resNotifyList = await api.getNotifyUser(notifyPagination);
     if (res) {
       setNumNotifyUnRead(res?.metadata);
     }
+  };
+
+  const getNotifyList = async () =>{
+    let resNotifyList = await api.getNotifyUser(notifyPagination);
     if (resNotifyList) {
       setNotifyList(resNotifyList?.metadata);
       notifyPagination.maxSizeCurrent = resNotifyList?.metadata?.length;
       setNotifyPagination(notifyPagination);
     }
-  };
+  }
 
   const handleMarkAllRead = async () => {
     await api.markAllNotifyRead();
-    getNotify();
+    getNotifyList();
   };
 
   const loadMoreNotify = async () => {
     notifyPagination.page = notifyPagination.page + 1;
     setNotifyPagination(notifyPagination);
-    getNotify();
+    getNotifyList();
+  };
+
+  const loadBackNotify = async () => {
+    if (notifyPagination?.page && notifyPagination.page > 0) {
+      notifyPagination.page = notifyPagination.page - 1;
+      setNotifyPagination(notifyPagination);
+      getNotifyList();
+    }
   };
 
   useEffect(() => {
-    if (profile) {
+    if (profile && profile?.id) {
       getRoleName();
-      getNotify();
+      getNotifyNum();
     }
   }, [profile]);
+
+  useEffect(()=> {
+    if(webSocketService && profile && profile?.id){
+      webSocketService.subscribePrivateGetRequestUpdateNotify(profile?.id,(message)=>{
+        if(message && message?.isSuccess){
+          getNotifyNum();
+        }
+      })
+    }
+  },[webSocketService,profile])
 
   useEffect(() => {
     dispatch(getProfile());
@@ -178,7 +199,9 @@ export default function WithSubnavigation() {
               notifies={notifyList}
               handleMarkAllRead={handleMarkAllRead}
               loadMoreNotify={loadMoreNotify}
+              loadBackNotify={loadBackNotify}
               notifyPagination={notifyPagination}
+              getNotifyList={getNotifyList}
             />
           </Stack>
         )}
@@ -498,7 +521,9 @@ const NotifyNavItem = ({
   numNotifyUnread,
   handleMarkAllRead,
   loadMoreNotify,
+  loadBackNotify,
   notifyPagination,
+  getNotifyList
 }) => {
   return (
     <>
@@ -509,6 +534,7 @@ const NotifyNavItem = ({
           cursor={"pointer"}
           minW={0}
           style={{ margin: "0 10px" }}
+          onClick={getNotifyList}
         >
           <Badge count={numNotifyUnread}>
             <IconButton icon={<FiBell />} />
@@ -543,11 +569,14 @@ const NotifyNavItem = ({
           <MenuItem justifyContent={"center"}>
             <div onClick={() => handleMarkAllRead()}>mark all read</div>
           </MenuItem>
-          {notifyPagination?.maxSizeCurrent >= 5 && (
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <button onClick={() => loadMoreNotify()}>more...</button>
-            </div>
-          )}
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            {notifyPagination?.maxSizeCurrent >= 5 && (
+              <Button variant='ghost' onClick={() => loadMoreNotify()}>more...</Button>
+            )}
+            {notifyPagination?.page > 0 && (
+              <Button variant='ghost' onClick={() => loadBackNotify()}>back</Button>
+            )}
+          </div>
         </MenuList>
       </Menu>
     </>

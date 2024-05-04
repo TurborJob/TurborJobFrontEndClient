@@ -21,8 +21,12 @@ import api from "../../services/api";
 import { getToast } from "../../utils/toast";
 import CardJob from "./CardJob";
 import Loader from "../Loader";
+import { useAppSelector } from "../../reduxs/hooks";
 
 function FindJobs() {
+  const { webSocketService, profile } = useAppSelector(
+    (state) => state.account
+  );
   const [jobs, setJobs] = useState([]);
   const [pagination, setPagination] = useState({ page: 0, size: 10, total: 0 });
   const [jobIdConfirm, setJobIdConfirm] = useState();
@@ -50,7 +54,7 @@ function FindJobs() {
     }
   };
 
-  const fetch = useCallback(async (page = 0, size = 10) => {
+  const fetch = useCallback(async (page = 0, size = 10, isSetPagination= true) => {
     const location = window.navigator && window.navigator.geolocation;
 
     if (location) {
@@ -64,7 +68,9 @@ function FindJobs() {
           const res = await api.getNormalJob({ page, size, ...geolocation });
           if (res) {
             setJobs(res?.metadata?.jobs);
-            setPagination({ ...pagination, total: res?.metadata?.total });
+            if(isSetPagination){
+              setPagination({ ...pagination, total: res?.metadata?.total });
+            }
           }
           setIsLoadingNormal(false);
         },
@@ -80,14 +86,18 @@ function FindJobs() {
   }, []);
 
   const onChangePagination = (page, pageSize) => {
-    fetch(page - 1, pageSize);
+    pagination.page = page;
+    pagination.size = pageSize;
+    setPagination(pagination)
+    fetch(page - 1, pageSize, false);
   };
 
   const handlerApplyJobNormal = async () => {
     setIsLoadingNormal(true);
     console.log("jobId", jobIdConfirm, descConfirm);
     if (!jobIdConfirm || !descConfirm) {
-      toast(getToast("error", "Invalid Parameter", "Error"));
+      toast(getToast("error", "Description is require!", "Error"));
+      setIsLoadingNormal(false);
       return;
     }
     const res = await api.applyNormalJob({
@@ -96,6 +106,9 @@ function FindJobs() {
     });
     if (res) {
       toast(getToast("success", res?.metadata, "Success"));
+      if(webSocketService && profile && profile?.id){
+        webSocketService.sendPrivateRequestUpdateNotify(null, profile?.id, "Send request update notify",jobIdConfirm);
+      }
       fetch();
     }
     onClose();
@@ -111,7 +124,13 @@ function FindJobs() {
       <div style={{ padding: 0 }}>
         <Row></Row>
         <Row gutter={[12, 12]}>
-          {jobs.length == 0 ? <Col style={{marginTop:'100px'}} span={24}><Empty /></Col> : ""}
+          {jobs.length == 0 ? (
+            <Col style={{ marginTop: "100px" }} span={24}>
+              <Empty />
+            </Col>
+          ) : (
+            ""
+          )}
           {jobs?.map((job) => (
             <Col
               xxs={24}
@@ -141,7 +160,7 @@ function FindJobs() {
           }}
         >
           <Pagination
-            defaultCurrent={pagination.page}
+            current={pagination.page}
             total={pagination.total}
             onChange={onChangePagination}
             showSizeChanger

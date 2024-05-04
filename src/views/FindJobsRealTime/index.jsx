@@ -78,6 +78,7 @@ function FindJobsRealTime() {
     }
     if (!jobIdConfirm || !descConfirm) {
       toast(getToast("error", "Invalid Parameter", "Error"));
+      setIsLoadingNormal(false);
       return;
     }
     const res = await api.applyNormalJob({
@@ -88,6 +89,7 @@ function FindJobsRealTime() {
     webSocketService.sendPrivateToRequestApplyJob(profile?.id, jobIdConfirm, "Request Apply job!")
     if (res) {
       toast(getToast("success", res?.metadata, "Success"));
+      webSocketService.sendPrivateRequestUpdateNotify(null, profile?.id, "Send request update notify",jobIdConfirm);
       fetch(0,10,false);
     }
     onClose();

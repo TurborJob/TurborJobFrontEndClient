@@ -35,12 +35,14 @@ function ListJob() {
   const [users, setUsers] = useState([]);
 
   // Start Fetch
-  const fetch = useCallback(async (isLoading = true,page = 0, size = 10) => {
+  const fetch = useCallback(async (isLoading = true,page = 0, size = 10, isSetPagination = true) => {
     setIsLoadingNormal(isLoading);
     const res = await api.getJob({ page, size });
     if (res) {
       setJobs(res?.metadata?.jobs);
-      setPagination({ ...pagination, total: res?.metadata?.total });
+      if(isSetPagination){
+        setPagination({ ...pagination, total: res?.metadata?.total });
+      }
     }
     setIsLoadingNormal(false);
   }, []);
@@ -71,8 +73,11 @@ function ListJob() {
     }
   }, [jobFocus]);
 
-  const onChangePagination = (page, pageSize) => {
-    fetch(true ,page - 1, pageSize);
+  const onChangePagination = async(page, pageSize) => {
+    pagination.page = page;
+    pagination.size = pageSize;
+    setPagination(pagination)
+    fetch(true ,page - 1, pageSize, false);
   };
 
   const handlerFindJobNormal = async (jobId) => {
@@ -80,7 +85,7 @@ function ListJob() {
     const res = await api.findNormalJob({ jobId });
     if (res) {
       toast(getToast("success", res?.metadata, "Success"));
-      fetch(true);
+      fetch(true)
     }
     setIsLoadingNormal(false);
   };
@@ -90,7 +95,7 @@ function ListJob() {
     const res = await api.updateJobToDone({ jobId });
     if (res) {
       toast(getToast("success", res?.metadata, "Success"));
-      fetch(true);
+      fetch(true, null, null, false);
     }
     setIsLoadingNormal(false);
   };
@@ -113,11 +118,12 @@ function ListJob() {
     }
 
     if (res) {
+      webSocketService.sendPrivateRequestUpdateNotify(userReqId, profile?.id, "Send request update notify", jobFocus?.id);
       toast(getToast("success", res?.metadata, "Success"));
       let checkJob = await api.checkJobSuccess({ jobId: jobFocus?.id });
       if (checkJob?.metadata) {
         onClose();
-        fetch(true);
+        fetch(true, null, null, false);
         return;
       }
       getApplyRequest(jobFocus?.id);
@@ -163,9 +169,11 @@ function ListJob() {
         ))}
       </Row>
       <Row style={{ display: "flex", justifyContent: "flex-end" }}>
+        {console.log("pagination2",pagination)}
         <Pagination
-          defaultCurrent={pagination.page}
+          current={pagination.page}
           total={pagination.total}
+          pageSize={pagination.size}
           onChange={onChangePagination}
           showSizeChanger
         />
