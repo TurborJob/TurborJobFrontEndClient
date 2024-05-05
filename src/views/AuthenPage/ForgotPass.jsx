@@ -7,9 +7,33 @@ import {
   Stack,
   Text,
   useColorModeValue,
+  useToast,
 } from "@chakra-ui/react";
+import { useState } from "react";
+
+import api from "../../services/api"
+import { getToast } from "../../utils/toast";
 
 export default function ForgotPass() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [username, setUsername] = useState();
+
+  const toast = useToast();
+
+  const handleForgotPass = async() => {
+    if(!username){
+      toast(getToast("error","Username is require!","Error"));
+      return;
+    }
+
+    setIsLoading(true);
+    const res = await api.forgotPass({username:username})
+    if(res){
+      console.log('res',res)
+      toast(getToast("success",res?.metadata,"Success"));
+    }
+    setIsLoading(false)
+  }
   return (
     <Flex
       minH={"100vh"}
@@ -34,13 +58,13 @@ export default function ForgotPass() {
           fontSize={{ base: "sm", sm: "md" }}
           color={useColorModeValue("gray.800", "gray.400")}
         >
-          You&apos;ll get an email with a reset link
+          Please enter username!
         </Text>
         <FormControl id="email">
           <Input
-            placeholder="your-email@example.com"
+            placeholder="your-username"
             _placeholder={{ color: "gray.500" }}
-            type="email"
+            onChange={(e)=>setUsername(e.target.value)}
           />
         </FormControl>
         <Stack spacing={6}>
@@ -50,6 +74,8 @@ export default function ForgotPass() {
             _hover={{
               bg: "blue.500",
             }}
+            isLoading={isLoading}
+            onClick={handleForgotPass}
           >
             Request Reset
           </Button>

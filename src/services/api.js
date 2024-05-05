@@ -7,6 +7,7 @@ var path = {
   login: { href: "/api/v1/login" },
   uploadFile: { href: "/api/v1/all/upload-file" },
   register: { href: "/api/v1/all/register" },
+  forgotPass: {href: "/api/v1/all/forgot-pass"},
   changePass: {href: "api/v1/auth/change-pass"},
   logout: { href: "/api/v1/logout" },
   getRoleName: { href: "/api/v1/user/get-role-name" },
@@ -32,6 +33,7 @@ var path = {
   getRequestNormalJobBusiness: {href: "/api/v1/business/get-request-normal-job"},
   updateJobToDone: {href: "/api/v1/business/update-job-done"},
   checkJobSuccess: {href: "/api/v1/business/check-job-success"},
+  getBusinessStatistic: {href: "/api/v1/business/get-business-statistic"},
 
   // logout: "/api/user/logout",
   // getCaptcha: "/api/user/create-captcha",
