@@ -14,22 +14,18 @@ import {
 import {
   FiHome,
   FiPlus,
-  FiList,
-  FiClipboard,
-  FiStar,
   FiMenu,
+  FiUser,
+  FiMail,
 } from "react-icons/fi";
 import { Link } from "react-router-dom";
 
 const LinkItems = [
-  { name: "Home", icon: FiHome, href: "../job-management/home" },
-  { name: "Create", icon: FiPlus, href: "../job-management/create" },
-  { name: "List Jobs", icon: FiList, href: "../job-management/list" },
-  // { name: "Notify History", icon: FiClipboard, href: "../job-management/notify-history" },
-  { name: "Rating List", icon: FiStar, href: "../job-management/rating" },
+  { name: "User", icon: FiUser, href: "../admin/user-management" },
+  { name: "Contact", icon: FiMail, href: "../contact/contact-maintenance" },
 ];
 
-export default function SimpleSidebarBusiness() {
+export default function SimpleSidebarAdmin() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>

@@ -42,7 +42,6 @@ export default function CardJob({ job, handleApply }) {
           <Text color={"blue.400"}>
             {job?.quantityWorkerCurrent}/{job?.quantityWorkerTotal} worker
           </Text>{" "}
-          gender: {job?.gender}
         </Text>
         <Text
           textAlign={"center"}

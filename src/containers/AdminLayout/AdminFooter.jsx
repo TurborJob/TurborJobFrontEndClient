@@ -51,7 +51,7 @@ const SocialButton = ({
   )
 }
 
-export default function DefaultFooter() {
+export default function AdminFooter() {
   return (
     <Box
       bg={useColorModeValue('gray.50', 'gray.900')}

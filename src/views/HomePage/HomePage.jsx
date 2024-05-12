@@ -16,11 +16,10 @@ import {
 import WithSpeechBubbles from '../HomePage/WithSpeechBubbles'
 import Pricing from '../HomePage/Pricing'
 import Statistics from '../HomePage/Statistics'
-import WebSocketComponent from '../widgets/WebSocketComponent'
 
 export default function HomePage() {
   return (
-    <Container maxW={'7xl'} pb={200}>
+    <Container maxW={'8xl'} pb={200}>
       <Stack
         align={'center'}
         spacing={{ base: 8, md: 10 }}

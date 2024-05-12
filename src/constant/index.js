@@ -23,12 +23,8 @@ export const NAV_ITEMS_WORKER = [
       href: "/rating",
     },
     {
-      label: "About",
-      href: "#",
-    },
-    {
       label: "Contact",
-      href: "#",
+      href: "/contact",
     },
   ];
 
@@ -38,26 +34,11 @@ export const NAV_ITEMS_WORKER = [
       href: "../job-management/home",
     },
     {
-      label: "Find Person",
-      children: [
-        {
-          label: "Real Time",
-          subLabel: "Find worker realtime",
-          href: "#",
-        },
-        {
-          label: "Normal",
-          subLabel: "Find worker normal",
-          href: "#",
-        },
-      ],
-    },
-    {
-      label: "About",
-      href: "#",
-    },
-    {
       label: "Contact",
-      href: "#",
+      href: "/contact",
     },
+  ];
+
+  export const NAV_ITEMS_ADMIN = [
+    
   ];

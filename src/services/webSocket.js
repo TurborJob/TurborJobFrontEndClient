@@ -19,7 +19,6 @@ class WebSocketService {
     if (this.stompClient) {
       this.stompClient.disconnect();
     }
-    console.log("Disconnected from WebSocket");
   }
 
   sendMessage(messageContent) {

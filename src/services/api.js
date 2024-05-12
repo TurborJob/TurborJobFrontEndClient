@@ -17,6 +17,8 @@ var path = {
   getNormalJob: {href: "/api/v1/user-only/get-normal-job"},
   applyNormalJob: {href: "/api/v1/user-only/apply-normal-job"},
   getRequestNormalJob: {href: "/api/v1/user-only/get-request-normal-job"},
+  getRequestNormalJob: {href: "/api/v1/user-only/get-request-normal-job"},
+  createContact: {href:"/api/v1/user-only/create-contact"},
 
   getRate: {href:"/api/v1/business-worker/get-rate"},
   rate: {href: '/api/v1/business-worker/rate'},
@@ -35,8 +37,10 @@ var path = {
   checkJobSuccess: {href: "/api/v1/business/check-job-success"},
   getBusinessStatistic: {href: "/api/v1/business/get-business-statistic"},
 
-  // logout: "/api/user/logout",
-  // getCaptcha: "/api/user/create-captcha",
+  getAdminStatistic: {href: "/api/v1/admin/get-admin-statistic"},
+  getUserByAdmin: {href: "api/v1/admin/get-user-by-admin"}
+
+
 };
 
 Object.keys(path).forEach(function (key) {
