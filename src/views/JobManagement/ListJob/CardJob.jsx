@@ -24,7 +24,7 @@ export default function CardJob({
 }) {
   const [jobState, setJobState] = useState(job);
 
-  const { profile, webSocketService } = useAppSelector(
+  const { profile, webSocketService, titleI18n } = useAppSelector(
     (state) => state.account
   );
   const navigate = useNavigate();
@@ -98,7 +98,7 @@ export default function CardJob({
             }}
             onClick={() => handlerFindJobNormal(jobState?.id)}
           >
-            Find
+            {titleI18n['find']}
           </Button>
           <Button
             flex={1}
@@ -117,7 +117,7 @@ export default function CardJob({
             }}
             onClick={handleFindNow}
           >
-            Find now
+            {titleI18n['find_now']}
           </Button>
         </>
       );
@@ -143,7 +143,7 @@ export default function CardJob({
           }}
           onClick={() => navigate(`../request-form#${jobState?.id}`)}
         >
-          Request form
+          {titleI18n['request_form']}
         </Button>
       );
     }
@@ -166,7 +166,7 @@ export default function CardJob({
             bg: "green.500",
           }}
         >
-          Done
+          {titleI18n['done']}
         </Button>
       );
     }
@@ -189,7 +189,7 @@ export default function CardJob({
             bg: "red.500",
           }}
         >
-          Fail
+          {titleI18n['fail']}
         </Button>
       );
     }
@@ -213,7 +213,7 @@ export default function CardJob({
           }}
           onClick={() => handleUpdateJobToDone(job?.id)}
         >
-          Update Done
+          {titleI18n['update_done']}
         </Button>
       );
     }
@@ -246,9 +246,9 @@ export default function CardJob({
         >
           {job?.description}
           <Text color={"blue.400"}>
-            {job?.quantityWorkerCurrent}/{job?.quantityWorkerTotal} worker
+            {job?.quantityWorkerCurrent}/{job?.quantityWorkerTotal} {titleI18n['workers']}
           </Text>{" "}
-          gender: {job?.gender}
+          {titleI18n['gender']}: {job?.gender}
         </Text>
         <Text
           textAlign={"center"}
@@ -259,10 +259,10 @@ export default function CardJob({
           {job?.startDate && job?.dueDate && (
             <>
               <div>
-                from: {moment(job.startDate).format("DD/MM/YYYY HH:mm:ss")}
+                {titleI18n['from']}: {moment(job.startDate).format("DD/MM/YYYY HH:mm:ss")}
               </div>
 
-              <div>to: {moment(job.dueDate).format("DD/MM/YYYY HH:mm:ss")}</div>
+              <div>{titleI18n['to']}: {moment(job.dueDate).format("DD/MM/YYYY HH:mm:ss")}</div>
             </>
           )}
         </Text>
@@ -281,7 +281,7 @@ export default function CardJob({
 
           {job?.viewer_num && (
             <Badge fontWeight={"800"} variant="subtle" colorScheme="green">
-              view: {job?.viewerNum}
+              {titleI18n['view']}: {job?.viewerNum}
             </Badge>
           )}
         </Stack>

@@ -11,8 +11,10 @@ import React from "react";
 import BasicInfo from "./BasicInfo";
 import { Col, Row } from "antd";
 import TabInfo from "./TabInfo";
+import { useAppSelector } from "../../reduxs/hooks";
 
 export default function Profile() {
+
   return (
     <VStack my={50}>
       <Container

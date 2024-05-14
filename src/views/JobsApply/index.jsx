@@ -20,8 +20,10 @@ import api from "../../services/api";
 import { getToast } from "../../utils/toast";
 import CardJob from "./CardJob";
 import Loader from "../Loader";
+import { useAppSelector } from "../../reduxs/hooks";
 
 function JobsApply() {
+  const { titleI18n } = useAppSelector((state) => state.account);
   const [jobs, setJobs] = useState([]);
   const [pagination, setPagination] = useState({ page: 0, size: 10, total: 0 });
   const [jobIdConfirm, setJobIdConfirm] = useState();
@@ -56,7 +58,7 @@ function JobsApply() {
   const handlerApplyJobNormal = async () => {
     setIsLoadingNormal(true);
     if (!jobIdConfirm || !descConfirm) {
-      toast(getToast("error", "Invalid Parameter", "Error"));
+      toast(getToast("error", titleI18n['invalid_parameter'], titleI18n['error']));
       return;
     }
     const res = await api.applyNormalJob({
@@ -64,7 +66,7 @@ function JobsApply() {
       description: descConfirm,
     });
     if (res) {
-      toast(getToast("success", res?.metadata, "Success"));
+      toast(getToast("success", res?.metadata, titleI18n['success']));
       fetch();
     }
     onClose();
@@ -80,7 +82,13 @@ function JobsApply() {
       <div style={{ padding: 0 }}>
         <Row></Row>
         <Row gutter={[12, 12]}>
-          {jobs.length == 0 ? <Col style={{marginTop:'100px'}} span={24}><Empty /></Col> : ""}
+          {jobs.length == 0 ? (
+            <Col style={{ marginTop: "100px" }} span={24}>
+              <Empty />
+            </Col>
+          ) : (
+            ""
+          )}
           {jobs?.map((job) => (
             <Col
               xxs={24}
@@ -121,10 +129,10 @@ function JobsApply() {
       <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Are you sure?</ModalHeader>
+          <ModalHeader>{titleI18n['are_you_sure']}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Text mb="1rem">Note</Text>
+            <Text mb="1rem">{titleI18n['note']}</Text>
             <Textarea
               size="sm"
               onChange={(e) => setDescConfirm(e.target.value)}
@@ -133,7 +141,7 @@ function JobsApply() {
 
           <ModalFooter>
             <Button colorScheme="blue" onClick={handlerApplyJobNormal}>
-              Confirm
+              {titleI18n['confirm']}
             </Button>
           </ModalFooter>
         </ModalContent>

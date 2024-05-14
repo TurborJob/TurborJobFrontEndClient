@@ -5,8 +5,11 @@ import { Container, useToast } from "@chakra-ui/react";
 import api from "../../../services/api";
 import RatingForm from "./RatingForm";
 import { getToast } from "../../../utils/toast";
+import { useAppSelector } from "../../../reduxs/hooks";
 
 function RatingPage() {
+  const { titleI18n } = useAppSelector((state) => state.account);
+
   const [isLoadingNormal, setIsLoadingNormal] = useState(false);
   const [pagination, setPagination] = useState({ page: 0, size: 10, total: 0 });
   const [userJobList, setUserJobList] = useState([]);
@@ -30,19 +33,19 @@ function RatingPage() {
     fetch();
   }, []);
 
-  const handleRating = async (rateValue, note, toUser) => {
+  const handleRating = async (rateValue, note, toUser,rateId) => {
     if (!rateValue) {
-      toast(getToast("error", "Rate value is require !", "Error"));
+      toast(getToast("error", titleI18n['rate_value_is_require'], titleI18n['error']));
       return;
     }
 
     if (!note) {
-      toast(getToast("error", "Your comment is require !", "Error"));
+      toast(getToast("error", titleI18n['your_comment_is_require'], titleI18n['error']));
       return;
     }
 
     if (!toUser) {
-      toast(getToast("error", "User rate is require !", "Error"));
+      toast(getToast("error", titleI18n['user_rate_is_require'], titleI18n['error']));
       return;
     }
     setIsLoadingNormal(true);
@@ -50,9 +53,10 @@ function RatingPage() {
       rateValue: parseFloat(rateValue),
       note,
       toUser,
+      rateId,
     });
     if (res) {
-      toast(getToast("success", res?.metadata, "Success"));
+      toast(getToast("success", res?.metadata, titleI18n['success']));
     }
     setIsLoadingNormal(false);
     fetch();
@@ -84,6 +88,7 @@ function RatingPage() {
                 <RatingForm
                   jobName={userJob?.jobName}
                   user={userJob?.user}
+                  rateId={userJob?.rateId}
                   handleRating={handleRating}
                 />
               </Col>

@@ -1,6 +1,8 @@
 import { Box, Heading, Text, Button, Link } from "@chakra-ui/react";
+import { useAppSelector } from "../reduxs/hooks";
 
 export default function NotFound() {
+  const { titleI18n } = useAppSelector((state) => state.account);
   return (
     <Box textAlign="center" py={100} px={6}>
       <Heading

@@ -4,9 +4,12 @@ import ImgCrop from 'antd-img-crop';
 import { getToast } from '../../utils/toast';
 import api from "../../services/api"
 import { useToast } from '@chakra-ui/react';
+import { useAppSelector } from '../../reduxs/hooks';
 
 
 const UploadImage= ({onChangeValue, value, limitImage}) => {
+  const { titleI18n } = useAppSelector((state) => state.account);
+
     const toast = useToast();
     const [fileList, setFileList] = useState([]);
   
@@ -57,7 +60,7 @@ const UploadImage= ({onChangeValue, value, limitImage}) => {
           onPreview={onPreview}
           style={{ justifyContent: "center" }}
         >
-          {fileList.length < limitImage && "+ Upload"}
+          {fileList.length < limitImage && "+ "+titleI18n['upload']}
         </Upload>
       </ImgCrop>
     );

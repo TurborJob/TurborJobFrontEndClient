@@ -19,18 +19,21 @@ import {
   FiMail,
 } from "react-icons/fi";
 import { Link } from "react-router-dom";
-
-const LinkItems = [
-  { name: "User", icon: FiUser, href: "../admin/user-management" },
-  { name: "Contact", icon: FiMail, href: "../contact/contact-maintenance" },
-];
+import { useAppSelector } from "../../reduxs/hooks";
 
 export default function SimpleSidebarAdmin() {
+  const {titleI18n } = useAppSelector((state) => state.account);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  
+  let linkItems = [
+    { name: titleI18n['user'], icon: FiUser, href: "../admin/user-management" },
+    { name: titleI18n['contact'], icon: FiMail, href: "../admin/contact-maintenance" },
+  ];
   return (
     <Box minH="100vh" bg={useColorModeValue("gray.100", "gray.900")}>
       <SidebarContent
         onClose={() => onClose}
+        linkItems={linkItems}
         display={{ base: "none", md: "block" }}
       />
       <Drawer
@@ -54,7 +57,7 @@ export default function SimpleSidebarAdmin() {
   );
 }
 
-const SidebarContent = ({ onClose, ...rest }) => {
+const SidebarContent = ({ onClose,linkItems, ...rest }) => {
   return (
     <Box
       bg={useColorModeValue("white", "gray.900")}
@@ -70,7 +73,7 @@ const SidebarContent = ({ onClose, ...rest }) => {
         </Text>
         <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
       </Flex>
-      {LinkItems.map((link, idx) => (
+      {linkItems.map((link, idx) => (
         <Link key={idx} to={link?.href || "#"}>
           <NavItem key={link.name} icon={link.icon}>
             {link.name}

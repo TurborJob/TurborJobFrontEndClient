@@ -2,8 +2,10 @@ import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import AccountSetting from "./AccountSetting";
 import ProfileSetting from "./ProfileSetting";
 import BusinessSetting from "./BusinessSetting";
+import { useAppSelector } from "../../reduxs/hooks";
 
 export default function TabInfo() {
+  const { titleI18n } = useAppSelector((state) => state.account);
   function DataTabs({ data }) {
     return (
       <Tabs style={{ fontFamily: "Poppins" }}>
@@ -26,24 +28,24 @@ export default function TabInfo() {
   // 2. Create an array of data
   const tabData = [
     {
-      label: "Account Setting",
+      label: titleI18n['account_setting'],
       content: <AccountSetting />,
     },
     {
-      label: "Profile Setting",
+      label: titleI18n['profile_setting'],
       content:
         <ProfileSetting />,
     },
     {
-      label: "Business Setting",
+      label: titleI18n['business_setting'],
       content:
         <BusinessSetting />,
     },
-    {
-      label: "Notification",
-      content:
-        "Perhaps the surest dish ever invented but fills the stomach more than rice.",
-    },
+    // {
+    //   label: "Notification",
+    //   content:
+    //     "Perhaps the surest dish ever invented but fills the stomach more than rice.",
+    // },
   ];
 
   // 3. Pass the props and chill!

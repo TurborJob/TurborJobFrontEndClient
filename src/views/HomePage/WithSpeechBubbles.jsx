@@ -8,6 +8,7 @@ import {
   Avatar,
   useColorModeValue,
 } from '@chakra-ui/react'
+import { useAppSelector } from '../../reduxs/hooks'
 
 const Testimonial = (props) => {
   const { children } = props
@@ -89,22 +90,22 @@ const TestimonialAvatar = ({
 }
 
 function WithSpeechBubbles() {
+  const { titleI18n } = useAppSelector((state) => state.account);
   return (
     <Box bg={useColorModeValue('gray.100', 'gray.700')}>
       <Container maxW={'7xl'} py={16} as={Stack} spacing={12}>
         <Stack spacing={0} align={'center'}>
-          <Heading>Our Clients Speak</Heading>
-          <Text>We have been working with clients around the world</Text>
+          <Heading>{titleI18n['our_clients_speak']}</Heading>
+          <Text>{titleI18n["we_have_been_working_with_clients_around_the_world"]}</Text>
         </Stack>
         <Stack
           direction={{ base: 'column', md: 'row' }}
           spacing={{ base: 10, md: 4, lg: 10 }}>
           <Testimonial>
             <TestimonialContent>
-              <TestimonialHeading>Efficient Collaborating</TestimonialHeading>
+              <TestimonialHeading>{titleI18n['efficient_collaborating']}</TestimonialHeading>
               <TestimonialText>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Auctor neque sed
-                imperdiet nibh lectus feugiat nunc sem.
+                {titleI18n["i_look_for_a_job_and_the_job_comes_to_me_i_can_see_the_level_of_prestige_to_choose_from"]}.
               </TestimonialText>
             </TestimonialContent>
             <TestimonialAvatar
@@ -112,39 +113,37 @@ function WithSpeechBubbles() {
                 'https://images.unsplash.com/photo-1586297135537-94bc9ba060aa?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80'
               }
               name={'Jane Cooper'}
-              title={'CEO at ABC Corporation'}
+              title={titleI18n['ceo_at_top_cv_corporation']}
             />
           </Testimonial>
           <Testimonial>
             <TestimonialContent>
-              <TestimonialHeading>Intuitive Design</TestimonialHeading>
+              <TestimonialHeading>{titleI18n['intuitive_design']}</TestimonialHeading>
               <TestimonialText>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Auctor neque sed
-                imperdiet nibh lectus feugiat nunc sem.
+                {titleI18n['intuitive_design_simple_interface_optimized_for_speed_very_smooth']}.
               </TestimonialText>
             </TestimonialContent>
             <TestimonialAvatar
               src={
                 'https://images.unsplash.com/photo-1586297135537-94bc9ba060aa?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80'
               }
-              name={'Jane Cooper'}
-              title={'CEO at ABC Corporation'}
+              name={'Jane Faker'}
+              title={titleI18n['ceo_at_it_viec_corporation']}
             />
           </Testimonial>
           <Testimonial>
             <TestimonialContent>
-              <TestimonialHeading>Mindblowing Service</TestimonialHeading>
+              <TestimonialHeading>{titleI18n["mind_blowing_service"]}</TestimonialHeading>
               <TestimonialText>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Auctor neque sed
-                imperdiet nibh lectus feugiat nunc sem.
+                {titleI18n["i_really_trust_and_use_the_contact_service"]}.
               </TestimonialText>
             </TestimonialContent>
             <TestimonialAvatar
               src={
                 'https://images.unsplash.com/photo-1586297135537-94bc9ba060aa?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80'
               }
-              name={'Jane Cooper'}
-              title={'CEO at ABC Corporation'}
+              name={'Jane Steven'}
+              title={titleI18n["ceo_at_human_corporation"]}
             />
           </Testimonial>
         </Stack>

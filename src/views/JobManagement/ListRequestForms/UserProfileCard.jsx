@@ -14,8 +14,11 @@ import {
 import CarouselImages from "../../widgets/CarouselImages";
 import moment from "moment";
 import { Rate } from "antd";
+import { useAppSelector } from "../../../reduxs/hooks";
 
 export default function UserProfileCard({ user, handleRequestApply }) {
+  const { titleI18n } = useAppSelector((state) => state.account);
+
   const renderBtn = () => (
     <>
       <Button
@@ -35,7 +38,7 @@ export default function UserProfileCard({ user, handleRequestApply }) {
         }}
         onClick={()=>handleRequestApply("approve")}
       >
-        Approve
+        {titleI18n['approve']}
       </Button>
 
       <Button
@@ -55,7 +58,7 @@ export default function UserProfileCard({ user, handleRequestApply }) {
         }}
         onClick={()=>handleRequestApply("reject")}
       >
-        Reject
+        {titleI18n['reject']}
       </Button>
     </>
   );
@@ -92,9 +95,9 @@ export default function UserProfileCard({ user, handleRequestApply }) {
               <Rate disabled value={user?.rating} />
             </Flex>
             <Center gap="middle" vertical>
-              {user?.countRate} reviewer
+              {user?.countRate} {titleI18n['reviewer']}
             </Center>
-          gender: {user?.gender}
+          {titleI18n['gender']}: {user?.gender}
         </Text>
         <Text
           textAlign={"center"}

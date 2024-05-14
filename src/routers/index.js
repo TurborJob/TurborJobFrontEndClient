@@ -28,6 +28,8 @@ const ContactPage =  React.lazy(() => import('../views/Contact'));
 // Admin
 const Dashboard = React.lazy(() => import('../views/AdminPage/Dashboard'));
 const UserManagement = React.lazy(() => import('../views/AdminPage/UserManagement'));
+const ContactMaintenance = React.lazy(() => import('../views/AdminPage/ContactMaintenance'));
+
 
 let routes;
 
@@ -54,6 +56,8 @@ let publicRouters = [
   { path: '/admin/dashboard', name: 'Dashboard', component: Dashboard, layout: AdminLayout },
   { path: '/admin/account-setting', name: 'Account Setting', component: AccountSetting, layout: AdminLayout },
   { path: '/admin/user-management', name: 'User Management', component: UserManagement, layout: AdminLayout },
+  { path: '/admin/contact-maintenance', name: 'Contact Maintenance', component: ContactMaintenance, layout: AdminLayout },
+
 
 
 ];

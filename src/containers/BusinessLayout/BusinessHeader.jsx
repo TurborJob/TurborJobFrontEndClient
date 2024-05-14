@@ -43,17 +43,15 @@ import { useEffect, useState } from "react";
 import localStorage from "../../utils/localStorage";
 import { getToast } from "../../utils/toast";
 import { Link } from "react-router-dom";
-import { NAV_ITEMS_BUSINESS, NAV_ITEMS_WORKER } from "../../constant";
 import { FiBell } from "react-icons/fi";
 import moment from "moment";
 import { Badge as BadgeCharka } from "@chakra-ui/react";
 import { Badge } from "antd";
-
+import SelectLang from "../../i18n/SelectLang";
 
 export default function WithSubnavigation() {
-  const { profile, userModeView, roles, webSocketService } = useAppSelector(
-    (state) => state.account
-  );
+  const { profile, userModeView, roles, webSocketService, titleI18n } =
+    useAppSelector((state) => state.account);
   const dispatch = useAppDispatch();
   const { isOpen, onToggle } = useDisclosure();
   const { colorMode, toggleColorMode } = useColorMode();
@@ -124,6 +122,47 @@ export default function WithSubnavigation() {
     }
   };
 
+  let NAV_ITEMS_WORKER = [
+    {
+      label: titleI18n?.["find_jobs"],
+      children: [
+        {
+          label: titleI18n?.["real_time"],
+          subLabel: titleI18n?.["find_your_work_realtime"],
+          href: "/find-jobs/realtime",
+        },
+        // {
+        //   label: "Normal",
+        //   subLabel: "Find your work normal",
+        //   href: "/find-jobs/normal",
+        // },
+      ],
+    },
+    {
+      label: titleI18n?.["job_apply"],
+      href: "/job-apply",
+    },
+    {
+      label: titleI18n["rating"],
+      href: "/rating",
+    },
+    {
+      label: titleI18n["contact"],
+      href: "/contact",
+    },
+  ];
+
+  let NAV_ITEMS_BUSINESS = [
+    {
+      label: titleI18n["job_management"],
+      href: "../job-management/home",
+    },
+    {
+      label: titleI18n["contact"],
+      href: "/contact",
+    },
+  ];
+
   return (
     <Box position={"fixed"} width={"100%"} zIndex={99}>
       <Flex
@@ -164,7 +203,11 @@ export default function WithSubnavigation() {
             <Link to={"../"}>TURBORJOB</Link>
           </Text>
           <Flex display={{ base: "none", md: "flex" }} ml={10}>
-            <DesktopNav userModeView={userModeView} />
+            <DesktopNav
+              userModeView={userModeView}
+              dataNavWorker={NAV_ITEMS_WORKER}
+              dataNavBusiness={NAV_ITEMS_BUSINESS}
+            />
           </Flex>
         </Flex>
         {roles.length > 1 && userModeView == "Business" && (
@@ -173,7 +216,7 @@ export default function WithSubnavigation() {
               colorScheme="purple"
               onClick={() => dispatch(setUserModeView("User"))}
             >
-              Worker View
+             {titleI18n["worker_view"]}
             </Button>
           </Stack>
         )}
@@ -183,7 +226,7 @@ export default function WithSubnavigation() {
               colorScheme="pink"
               onClick={() => dispatch(setUserModeView("Business"))}
             >
-              Business View
+              {titleI18n["business_view"]}
             </Button>
           </Stack>
         )}
@@ -198,6 +241,7 @@ export default function WithSubnavigation() {
               loadBackNotify={loadBackNotify}
               notifyPagination={notifyPagination}
               getNotifyList={getNotifyList}
+              titleI18n={titleI18n}
             />
           </Stack>
         )}
@@ -209,7 +253,7 @@ export default function WithSubnavigation() {
         </Stack>
         {profile ? (
           <Stack px={{ base: 3 }}>
-            <UserNavItem profile={profile} />
+            <UserNavItem profile={profile} titleI18n={titleI18n} />
           </Stack>
         ) : (
           <Stack
@@ -225,7 +269,7 @@ export default function WithSubnavigation() {
               variant={"link"}
               href={"../login"}
             >
-              Sign In
+              {titleI18n["sign_in"]}
             </Button>
             <Button
               as={"a"}
@@ -239,19 +283,26 @@ export default function WithSubnavigation() {
                 bg: "pink.300",
               }}
             >
-              Sign Up
+              {titleI18n["sign_up"]}
             </Button>
           </Stack>
         )}
+        <Flex mx={3}>
+          <SelectLang />
+        </Flex>
       </Flex>
       <Collapse in={isOpen} animateOpacity>
-        <MobileNav userModeView={userModeView} />
+        <MobileNav
+          userModeView={userModeView}
+          dataNavWorker={NAV_ITEMS_WORKER}
+          dataNavBusiness={NAV_ITEMS_BUSINESS}
+        />
       </Collapse>
     </Box>
   );
 }
 
-const DesktopNav = ({ userModeView }) => {
+const DesktopNav = ({ userModeView, dataNavWorker, dataNavBusiness }) => {
   const linkColor = useColorModeValue("gray.600", "gray.200");
   const linkHoverColor = useColorModeValue("gray.800", "white");
   const popoverContentBgColor = useColorModeValue("white", "gray.800");
@@ -259,7 +310,7 @@ const DesktopNav = ({ userModeView }) => {
   return (
     <Stack direction={"row"} spacing={4}>
       {userModeView == "User" &&
-        NAV_ITEMS_WORKER.map((navItem) => (
+        dataNavWorker.map((navItem) => (
           <Box key={navItem.label}>
             <Popover trigger={"hover"} placement={"bottom-start"}>
               <PopoverTrigger>
@@ -299,7 +350,7 @@ const DesktopNav = ({ userModeView }) => {
           </Box>
         ))}
       {userModeView == "Business" &&
-        NAV_ITEMS_BUSINESS.map((navItem) => (
+        dataNavBusiness.map((navItem) => (
           <Box key={navItem.label}>
             <Popover trigger={"hover"} placement={"bottom-start"}>
               <PopoverTrigger>
@@ -383,7 +434,7 @@ const DesktopSubNav = ({ label, href, subLabel }) => {
   );
 };
 
-const MobileNav = ({ userModeView }) => {
+const MobileNav = ({ userModeView, dataNavWorker, dataNavBusiness }) => {
   return (
     <Stack
       bg={useColorModeValue("white", "gray.800")}
@@ -391,11 +442,11 @@ const MobileNav = ({ userModeView }) => {
       display={{ md: "none" }}
     >
       {userModeView == "User" &&
-        NAV_ITEMS_WORKER.map((navItem) => (
+        dataNavWorker.map((navItem) => (
           <MobileNavItem key={navItem.label} {...navItem} />
         ))}
       {userModeView == "Business" &&
-        NAV_ITEMS_BUSINESS.map((navItem) => (
+        dataNavBusiness.map((navItem) => (
           <MobileNavItem key={navItem.label} {...navItem} />
         ))}
     </Stack>
@@ -455,7 +506,7 @@ const MobileNavItem = ({ label, children, href }) => {
   );
 };
 
-const UserNavItem = ({ profile }) => {
+const UserNavItem = ({ profile, titleI18n }) => {
   const toast = useToast();
 
   const handleLogout = async () => {
@@ -501,9 +552,9 @@ const UserNavItem = ({ profile }) => {
         <MenuDivider />
         {/* <MenuItem>Your Profile</MenuItem> */}
         <MenuItem>
-          <Link to={"../account-setting"}>Account Settings</Link>
+          <Link to={"../account-setting"}>{titleI18n["account_settings"]}</Link>
         </MenuItem>
-        <MenuItem onClick={handleLogout}>Logout</MenuItem>
+        <MenuItem onClick={handleLogout}>{titleI18n["logout"]}</MenuItem>
       </MenuList>
     </Menu>
   );
@@ -517,6 +568,7 @@ const NotifyNavItem = ({
   loadBackNotify,
   notifyPagination,
   getNotifyList,
+  titleI18n,
 }) => {
   return (
     <>
@@ -548,7 +600,7 @@ const NotifyNavItem = ({
                   {notify?.title}{" "}
                   {!notify?.isRead && (
                     <BadgeCharka ml="1" colorScheme="green">
-                      New
+                      {titleI18n["new"]}
                     </BadgeCharka>
                   )}
                 </Heading>
@@ -560,17 +612,19 @@ const NotifyNavItem = ({
             ))}
           </Stack>
           <MenuItem justifyContent={"center"}>
-            <div onClick={() => handleMarkAllRead()}>mark all read</div>
+            <div onClick={() => handleMarkAllRead()}>
+              {titleI18n["mark_all_read"]}
+            </div>
           </MenuItem>
           <div style={{ display: "flex", justifyContent: "center" }}>
             {notifyPagination?.maxSizeCurrent >= 5 && (
               <Button variant="ghost" onClick={() => loadMoreNotify()}>
-                more...
+                {titleI18n["more_..."]}
               </Button>
             )}
             {notifyPagination?.page > 0 && (
               <Button variant="ghost" onClick={() => loadBackNotify()}>
-                back
+                {titleI18n["back"]}
               </Button>
             )}
           </div>

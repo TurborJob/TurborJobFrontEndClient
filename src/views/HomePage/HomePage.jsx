@@ -16,8 +16,10 @@ import {
 import WithSpeechBubbles from '../HomePage/WithSpeechBubbles'
 import Pricing from '../HomePage/Pricing'
 import Statistics from '../HomePage/Statistics'
+import { useAppSelector } from '../../reduxs/hooks';
 
 export default function HomePage() {
+  const { titleI18n } = useAppSelector((state) => state.account);
   return (
     <Container maxW={'8xl'} pb={200}>
       <Stack
@@ -43,17 +45,15 @@ export default function HomePage() {
                 bg: 'red.400',
                 zIndex: -1,
               }}>
-              Write once,
+              {titleI18n["find_job"]}, {titleI18n["real_time"]},
             </Text>
             <br />
             <Text as={'span'} color={'red.400'}>
-              use everywhere!
+            {titleI18n["use_everywhere"]}!
             </Text>
           </Heading>
           <Text color={'gray.500'}>
-            Snippy is a rich coding snippets app that lets you create your own code
-            snippets, categorize them, and even sync them in the cloud so you can use them
-            anywhere. All that is free!
+          {titleI18n["system_introduction"]}
           </Text>
           <Stack spacing={{ base: 4, sm: 6 }} direction={{ base: 'column', sm: 'row' }}>
             <Button
@@ -64,7 +64,7 @@ export default function HomePage() {
               colorScheme={'red'}
               bg={'red.400'}
               _hover={{ bg: 'red.500' }}>
-              Get started
+                {titleI18n["get_started"]}
             </Button>
             <Button
               rounded={'full'}
@@ -72,7 +72,8 @@ export default function HomePage() {
               fontWeight={'normal'}
               px={6}
               leftIcon={<PlayIcon h={4} w={4} color={'gray.300'} />}>
-              How It Works
+                {titleI18n["how_it_works"]}
+              
             </Button>
           </Stack>
         </Stack>

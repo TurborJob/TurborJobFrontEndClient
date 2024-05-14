@@ -5,8 +5,11 @@ import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import React, { useState } from "react";
 import api from "../../services/api";
 import { getToast } from "../../utils/toast";
+import { useAppSelector } from "../../reduxs/hooks";
 
 export default function AccountSetting() {
+  const { titleI18n } = useAppSelector((state) => state.account);
+
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
 
@@ -17,7 +20,7 @@ export default function AccountSetting() {
     setIsLoading(true);
     let res = await api.changePass({ password, newPassword });
     if (res && !res?.errorMessage) {
-      toast(getToast("success", res.metadata, "Success"));
+      toast(getToast("success", res.metadata, titleI18n['success']));
       location.reload();
     }
     setIsLoading(false);
@@ -34,7 +37,7 @@ export default function AccountSetting() {
             <Form.Item
               label={
                 <Text color={useColorModeValue("gray.900", "white")}>
-                  Old Password
+                  {titleI18n['old_password']}
                 </Text>
               }
               name="password"
@@ -50,17 +53,17 @@ export default function AccountSetting() {
             <Form.Item
               label={
                 <Text color={useColorModeValue("gray.900", "white")}>
-                  New password
+                  {titleI18n['new_password']}
                 </Text>
               }
               name="newPassword"
               rules={[
-                { required: true, message: "Password is require!" },
+                { required: true, message: titleI18n['password_is_require'] },
                 {
                   pattern: new RegExp(
                     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$/
                   ),
-                  message: "Password is wrong format!",
+                  message: titleI18n['password_is_wrong_format'],
                 },
               ]}
               hasFeedback
@@ -74,13 +77,13 @@ export default function AccountSetting() {
           </Col>
           <Col xxs={24} xs={24} sm={12} md={24} lg={24} xl={12}>
             <Form.Item
-              label="Confirm Password"
+              label={titleI18n['confirm_password']}
               name="confirmPassword"
               dependencies={["password"]}
               rules={[
                 {
                   required: true,
-                  message: "Confirm Password is require!",
+                  message: titleI18n['confirm_password_is_require'],
                 },
                 ({ getFieldValue }) => ({
                   validator(_, value) {
@@ -88,7 +91,7 @@ export default function AccountSetting() {
                       return Promise.resolve();
                     }
                     return Promise.reject(
-                      new Error("Confirm Password do not match!")
+                      new Error(titleI18n['confirm_password_do_not_match'])
                     );
                   },
                 }),
@@ -110,7 +113,7 @@ export default function AccountSetting() {
             loading={isLoading}
             htmlType="submit"
           >
-            Submit
+            {titleI18n['submit']}
           </Button>
         </Form.Item>
       </Form>

@@ -8,6 +8,7 @@ import {
   StatNumber,
   useColorModeValue,
 } from '@chakra-ui/react'
+import { useAppSelector } from '../../reduxs/hooks';
 
 function StatsCard(props) {
   const { title, stat } = props
@@ -31,16 +32,17 @@ function StatsCard(props) {
 
 export default function BasicStatistics(props) {
   const {totalAccount, totalContact, totalSession} = props
+  const { titleI18n } = useAppSelector((state) => state.account);
 
   return (
     <Box maxW="7xl" mx={'auto'} pt={5} px={{ base: 2, sm: 12, md: 17 }}>
       <chakra.h1 textAlign={'center'} fontSize={'4xl'} py={10} fontWeight={'bold'}>
-        What is our company doing?
+      {titleI18n['what_is_our_company_doing']}
       </chakra.h1>
       <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: 5, lg: 8 }}>
-        <StatsCard title={'We have'} stat={totalAccount+' accounts'} />
-        <StatsCard title={'Have'} stat={totalContact+' contacts'} />
-        <StatsCard title={'And'} stat={totalSession+' session is running!'} />
+        <StatsCard title={titleI18n['we_have']} stat={totalAccount+' '+titleI18n['accounts']} />
+        <StatsCard title={titleI18n['have']} stat={totalContact+' '+titleI18n['contacts']} />
+        <StatsCard title={titleI18n['and']} stat={totalSession+' '+titleI18n['session_is_running']} />
       </SimpleGrid>
     </Box>
   )

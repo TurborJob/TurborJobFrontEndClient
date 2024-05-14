@@ -28,7 +28,7 @@ import { useAppSelector } from "../../reduxs/hooks";
 import IpPicker from "../widgets/IpPicker";
 
 function ProfileSetting() {
-  const { profile } = useAppSelector((state) => state.account);
+  const { profile, titleI18n } = useAppSelector((state) => state.account);
 
   const toast = useToast();
   const navigate = useNavigate();
@@ -62,7 +62,7 @@ function ProfileSetting() {
       setIsLoading(true);
       let res = await api.updateProfile({ ...data, birthday });
       if (res && !res?.errorMessage) {
-        toast(getToast("success", res.message, "Success"));
+        toast(getToast("success", res.message, titleI18n['success']));
         if (res?.metadata) {
           local.add("profile", JSON.stringify(res.metadata));
           location.reload();
@@ -77,14 +77,14 @@ function ProfileSetting() {
       <Stack spacing={4}>
         <Form form={form} layout={"vertical"}>
           <HStack style={{ marginBottom: "20px" }}>
-            {uploadAvatar(setAvatarLink)}
+            {uploadAvatar(setAvatarLink, titleI18n)}
           </HStack>
           <Grid gap={2}>
             <Box>
               <Form.Item
-                label="Full name"
+                label={titleI18n['full_name']}
                 name="fullName"
-                rules={[{ required: true, message: "First name is require!" }]}
+                rules={[{ required: true, message: titleI18n['full_name_is_require'] }]}
               >
                 <Input />
               </Form.Item>
@@ -93,13 +93,13 @@ function ProfileSetting() {
           <Grid templateColumns="repeat(2, 1fr)" gap={2}>
             <Box>
               <Form.Item
-                label="Email"
+                label={titleI18n['email']}
                 name="email"
                 rules={[
-                  { required: true, message: "Email is require!" },
+                  { required: true, message: titleI18n['email_is_require'] },
                   {
                     type: "email",
-                    message: "Email is valid!",
+                    message: titleI18n['email_is_invalid'],
                   },
                 ]}
                 hasFeedback
@@ -109,15 +109,15 @@ function ProfileSetting() {
             </Box>
             <Box>
               <Form.Item
-                label="Phone"
+                label={titleI18n['phone']}
                 name="phone"
                 rules={[
-                  { required: true, message: "Phone is require!" },
+                  { required: true, message: titleI18n['phone_is_require'] },
                   {
                     pattern: new RegExp(
                       /^(0|\+84)(3[2-9]|5[2-8]|7[06-9]|8[1-9]|9[0-9])\d{7}$/
                     ),
-                    message: "Phone is valid!",
+                    message: titleI18n['phone_is_invalid'],
                   },
                 ]}
                 hasFeedback
@@ -128,30 +128,30 @@ function ProfileSetting() {
           </Grid>
 
           <Form.Item
-            label="Address"
+            label={titleI18n['address']}
             name="address"
-            rules={[{ required: true, message: "Address is require!" }]}
+            rules={[{ required: true, message: titleI18n['address_is_require'] }]}
           >
             <Input />
           </Form.Item>
           <Grid templateColumns="repeat(2, 1fr)" gap={6}>
             <Box>
               <Form.Item
-                label="Gender"
+                label={titleI18n['gender']}
                 name={"gender"}
                 initialValue={profile?.gender}
               >
                 <Select style={{ minWidth: "150px" }} defaultValue={"male"}>
-                  <Select.Option value="male">Male</Select.Option>
-                  <Select.Option value="female">Female</Select.Option>
+                  <Select.Option value="male">{titleI18n['male']}</Select.Option>
+                  <Select.Option value="female">{titleI18n['female']}</Select.Option>
                 </Select>
               </Form.Item>
             </Box>
             <Box>
               <Form.Item
-                label="Birthday"
+                label={titleI18n['birthday']}
                 name="birthday"
-                rules={[{ required: true, message: "Birthday is require!" }]}
+                rules={[{ required: true, message: titleI18n['birthday_is_require'] }]}
                 format={"dd/MM/yyyy"}
               >
                 <DatePicker />
@@ -159,7 +159,7 @@ function ProfileSetting() {
             </Box>
           </Grid>
           <Box>
-            <Text>Click in map to choose IP!</Text>
+            <Text>{titleI18n['click_in_map_to_choose_ip']}</Text>
             <div>{ip ? ip?.lat + ", " + ip?.lng : ""}</div>
             <IpPicker onChangeValue={setIp} value={ip} />
           </Box>
@@ -170,14 +170,13 @@ function ProfileSetting() {
               loading={isLoading}
               onClick={handleUpdateProfile}
             >
-              Update
+              {titleI18n['update']}
             </Button>
           </Stack>
         </Form>
         <UnorderedList style={{ fontSize: "small", fontWeight: "lighter" }}>
           <ListItem>
-            Phone numbers for Vietnamese carriers must be either 10 or 11 digits
-            long.
+            {titleI18n['phone_numbers_for_vietnamese_carriers_must_be_either_10_or_11_digits_long']}
           </ListItem>
         </UnorderedList>
       </Stack>
@@ -185,7 +184,7 @@ function ProfileSetting() {
   );
 }
 
-const uploadAvatar = (setAvatarLink) => {
+const uploadAvatar = (setAvatarLink, titleI18n) => {
   const toast = useToast();
   const [fileList, setFileList] = useState([
     // {
@@ -249,7 +248,7 @@ const uploadAvatar = (setAvatarLink) => {
         onPreview={onPreview}
         style={{ justifyContent: "center" }}
       >
-        {fileList.length < 1 && "+ Upload"}
+        {fileList.length < 1 && "+ "+titleI18n['upload']}
       </Upload>
     </ImgCrop>
   );

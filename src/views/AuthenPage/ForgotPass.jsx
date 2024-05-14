@@ -13,8 +13,11 @@ import { useState } from "react";
 
 import api from "../../services/api"
 import { getToast } from "../../utils/toast";
+import { useAppSelector } from "../../reduxs/hooks";
 
 export default function ForgotPass() {
+  const { titleI18n } = useAppSelector((state) => state.account);
+
   const [isLoading, setIsLoading] = useState(false);
   const [username, setUsername] = useState();
 
@@ -22,7 +25,7 @@ export default function ForgotPass() {
 
   const handleForgotPass = async() => {
     if(!username){
-      toast(getToast("error","Username is require!","Error"));
+      toast(getToast("error",titleI18n['username_is_require'],titleI18n['error']));
       return;
     }
 
@@ -30,7 +33,7 @@ export default function ForgotPass() {
     const res = await api.forgotPass({username:username})
     if(res){
       console.log('res',res)
-      toast(getToast("success",res?.metadata,"Success"));
+      toast(getToast("success",res?.metadata,titleI18n['success']));
     }
     setIsLoading(false)
   }
@@ -52,13 +55,13 @@ export default function ForgotPass() {
         my={12}
       >
         <Heading lineHeight={1.1} fontSize={{ base: "2xl", md: "3xl" }}>
-          Forgot your password?
+          {titleI18n['forgot_your_password']}
         </Heading>
         <Text
           fontSize={{ base: "sm", sm: "md" }}
           color={useColorModeValue("gray.800", "gray.400")}
         >
-          Please enter username!
+          {titleI18n['please_enter_username']}
         </Text>
         <FormControl id="email">
           <Input
@@ -77,7 +80,7 @@ export default function ForgotPass() {
             isLoading={isLoading}
             onClick={handleForgotPass}
           >
-            Request Reset
+            {titleI18n['request_reset']}
           </Button>
         </Stack>
       </Stack>

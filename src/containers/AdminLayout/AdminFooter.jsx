@@ -8,6 +8,7 @@ import {
   VisuallyHidden,
 } from '@chakra-ui/react'
 import { FaInstagram, FaTwitter, FaYoutube } from 'react-icons/fa'
+import { useAppSelector } from '../../reduxs/hooks'
 
 const Logo = (props) => {
   return (
@@ -52,6 +53,7 @@ const SocialButton = ({
 }
 
 export default function AdminFooter() {
+  const {titleI18n } = useAppSelector((state) => state.account);
   return (
     <Box
       bg={useColorModeValue('gray.50', 'gray.900')}
@@ -65,7 +67,7 @@ export default function AdminFooter() {
         justify={{ base: 'center', md: 'space-between' }}
         align={{ base: 'center', md: 'center' }}>
         <Logo />
-        <Text>© 2024 Turborvip. All rights reserved</Text>
+        <Text>{titleI18n["footer_description"]}</Text>
         <Stack direction={'row'} spacing={6}>
           <SocialButton label={'Twitter'} href={'#'}>
             <FaTwitter />

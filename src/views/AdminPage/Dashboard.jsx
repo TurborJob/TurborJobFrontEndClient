@@ -5,6 +5,7 @@ import { Row, Col } from "antd";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
 import BasicStatistics from "./Statistic";
+import { useAppSelector } from "../../reduxs/hooks";
 
 ChartJS.register(ArcElement, Tooltip, Legend, Title);
 
@@ -56,6 +57,8 @@ let defaultDoughnutDataRating = {
 };
 
 function Dashboard() {
+  const { titleI18n } = useAppSelector((state) => state.account);
+
   let [totalAccounts, setTotalAccounts] = useState();
   let [totalContacts, setTotalContacts] = useState();
   // let [totalDevices, setTotalDevices] = useState();
@@ -129,7 +132,7 @@ function Dashboard() {
                   plugins: {
                     title: {
                       display: true,
-                      text: "Accounts",
+                      text: titleI18n['accounts'],
                       align: "center",
                       padding: {
                         top: 10,
@@ -168,7 +171,7 @@ function Dashboard() {
                   plugins: {
                     title: {
                       display: true,
-                      text: "Contacts",
+                      text: titleI18n['contacts'],
                       align: "center",
                       padding: {
                         top: 10,

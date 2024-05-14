@@ -11,31 +11,33 @@ import {
 } from "@chakra-ui/react";
 import CarouselImages from "../widgets/CarouselImages";
 import moment from "moment";
+import { useAppSelector } from "../../reduxs/hooks";
 
 export default function CardJob({ job, status }) {
+  const { titleI18n } = useAppSelector((state) => state.account);
 
   const renderBtn = () => {
-
     if (status == "pending") {
       return (
-      <Button
-        flex={1}
-        fontSize={"sm"}
-        rounded={"full"}
-        bg={"yellow.400"}
-        color={"white"}
-        boxShadow={
-          "0px 1px 25px -5px rgb(66 153 225 / 48%), 0 10px 10px -5px rgb(66 153 225 / 43%)"
-        }
-        _hover={{
-          bg: "yellow.500",
-        }}
-        _focus={{
-          bg: "yellow.500",
-        }}
-      >
-        Pending
-      </Button>)
+        <Button
+          flex={1}
+          fontSize={"sm"}
+          rounded={"full"}
+          bg={"yellow.400"}
+          color={"white"}
+          boxShadow={
+            "0px 1px 25px -5px rgb(66 153 225 / 48%), 0 10px 10px -5px rgb(66 153 225 / 43%)"
+          }
+          _hover={{
+            bg: "yellow.500",
+          }}
+          _focus={{
+            bg: "yellow.500",
+          }}
+        >
+          {titleI18n["pending"]}
+        </Button>
+      );
     }
 
     if (status == "approve") {
@@ -56,7 +58,7 @@ export default function CardJob({ job, status }) {
             bg: "green.500",
           }}
         >
-          Approve
+          {titleI18n["approve"]}
         </Button>
       );
     }
@@ -79,7 +81,7 @@ export default function CardJob({ job, status }) {
             bg: "red.500",
           }}
         >
-          Reject
+          {titleI18n["reject"]}
         </Button>
       );
     }
@@ -112,9 +114,10 @@ export default function CardJob({ job, status }) {
         >
           {job?.description}
           <Text color={"blue.400"}>
-            {job?.quantityWorkerCurrent}/{job?.quantityWorkerTotal} worker
+            {job?.quantityWorkerCurrent}/{job?.quantityWorkerTotal}{" "}
+            {titleI18n["workers"]}
           </Text>{" "}
-          gender: {job?.gender}
+          {titleI18n["gender"]}: {job?.gender}
         </Text>
         <Text
           textAlign={"center"}
@@ -123,9 +126,15 @@ export default function CardJob({ job, status }) {
         >
           {job?.startDate && job?.dueDate && (
             <>
-              <div>from: {moment(job.startDate).format("DD/MM/YYYY HH:mm:ss")}</div>
+              <div>
+                {titleI18n["from"]}:{" "}
+                {moment(job.startDate).format("DD/MM/YYYY HH:mm:ss")}
+              </div>
 
-              <div>to: {moment(job.dueDate).format("DD/MM/YYYY HH:mm:ss")}</div>
+              <div>
+                {titleI18n["to"]}:{" "}
+                {moment(job.dueDate).format("DD/MM/YYYY HH:mm:ss")}
+              </div>
             </>
           )}
         </Text>
@@ -143,15 +152,13 @@ export default function CardJob({ job, status }) {
 
           {job?.viewer_num && (
             <Badge fontWeight={"800"} variant="subtle" colorScheme="green">
-              view: {job?.viewerNum}
+              {titleI18n["view"]}: {job?.viewerNum}
             </Badge>
           )}
         </Stack>
 
         <Stack mt={8} direction={"row"} spacing={4}>
-          {
-            renderBtn()
-          }
+          {renderBtn()}
         </Stack>
       </Box>
     </Center>

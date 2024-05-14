@@ -43,12 +43,11 @@ import { useEffect, useState } from "react";
 import localStorage from "../../utils/localStorage";
 import { getToast } from "../../utils/toast";
 import { Link } from "react-router-dom";
-import { NAV_ITEMS_ADMIN, NAV_ITEMS_BUSINESS, NAV_ITEMS_WORKER } from "../../constant";
-import { FiBell } from "react-icons/fi";
-import moment from "moment";
-import { Badge as BadgeCharka } from "@chakra-ui/react";
-import { Badge } from "antd";
+import SelectLang from "../../i18n/SelectLang";
 
+let NAV_ITEMS_ADMIN = [
+    
+];
 
 export default function AdminHeader() {
   const { profile, userModeView, roles, webSocketService } = useAppSelector(
@@ -174,6 +173,9 @@ export default function AdminHeader() {
             </Button> */}
           </Stack>
         )}
+        <Flex mx={2}>
+          <SelectLang />
+        </Flex>
       </Flex>
       <Collapse in={isOpen} animateOpacity>
         <MobileNav userModeView={userModeView} />

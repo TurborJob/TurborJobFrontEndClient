@@ -4,16 +4,32 @@ import api from "../../../services/api";
 import Loader from "../../Loader";
 import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
-import { Badge, useToast } from "@chakra-ui/react";
+import {
+  Badge,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Text,
+  Textarea,
+  useDisclosure,
+  useToast,
+} from "@chakra-ui/react";
 import { getToast } from "../../../utils/toast";
 import { useAppSelector } from "../../../reduxs/hooks";
 
-function UserManagement() {
+function ContactMaintenance() {
   const { titleI18n } = useAppSelector((state) => state.account);
 
-  const toast = useToast()
+  const toast = useToast();
   const [loading, setIsLoading] = useState(false);
-  const [dataUser, setDataUser] = useState([]);
+  const [dataContact, setDataContact] = useState([]);
+  const [descConfirm, setDescConfirm] = useState(null);
+  const [idContactFocus, setIdContactFocus] = useState(null);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
@@ -32,16 +48,16 @@ function UserManagement() {
     isSetPagination = true
   ) => {
     setIsLoading(isLoading);
-    const res = await api.getUserByAdmin({ page, size });
+    const res = await api.getAllContact({ page, size });
     if (res) {
-      setDataUser(res?.metadata?.accounts);
+      setDataContact(res?.metadata?.content);
       if (isSetPagination) {
         setTableParams({
           ...tableParams,
           pagination: {
             ...tableParams.pagination,
-            total: res?.metadata?.total,
-            pageSize:tableParams.pagination.pageSize
+            total: res?.metadata?.totalPages,
+            pageSize: tableParams.pagination.pageSize,
           },
         });
       }
@@ -76,13 +92,23 @@ function UserManagement() {
     setSearchText("");
   };
 
-  const handleStatusAcc = async ({idUser,status}) => {
-      const res = await api.updateStatusUserByAdmin({status,idUser})
-      if(res){
-        toast(getToast("success", res.metadata, titleI18n['success']));
-      }
-      fetch(true, tableParams.pagination.current-1, tableParams.pagination.pageSize, false);
-  }
+  const handleReply = async () => {
+    const res = await api.replyContact({
+      content: descConfirm,
+      idContact: idContactFocus,
+    });
+    if (res) {
+      toast(getToast("success", res.metadata, titleI18n["success"]));
+      setIdContactFocus();
+      setDescConfirm();
+    }
+    fetch(
+      true,
+      tableParams.pagination.current - 1,
+      tableParams.pagination.pageSize,
+      false
+    );
+  };
 
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({
@@ -100,7 +126,7 @@ function UserManagement() {
       >
         <Input
           ref={searchInput}
-          placeholder={`${titleI18n['success']} ${dataIndex}`}
+          placeholder={`${titleI18n["search"]} ${dataIndex}`}
           value={selectedKeys[0]}
           onChange={(e) =>
             setSelectedKeys(e.target.value ? [e.target.value] : [])
@@ -121,7 +147,7 @@ function UserManagement() {
               width: 90,
             }}
           >
-            {titleI18n['search']}
+            {titleI18n["search"]}
           </Button>
           <Button
             onClick={() => clearFilters && handleReset(clearFilters)}
@@ -130,7 +156,7 @@ function UserManagement() {
               width: 90,
             }}
           >
-            {titleI18n['reset']}
+            {titleI18n["reset"]}
           </Button>
           <Button
             type="link"
@@ -143,7 +169,7 @@ function UserManagement() {
               setSearchedColumn(dataIndex);
             }}
           >
-            {titleI18n['filter']}
+            {titleI18n["filter"]}
           </Button>
           <Button
             type="link"
@@ -152,7 +178,7 @@ function UserManagement() {
               close();
             }}
           >
-            {titleI18n['close']}
+            {titleI18n["close"]}
           </Button>
         </Space>
       </div>
@@ -193,78 +219,45 @@ function UserManagement() {
 
   const columns = [
     {
-      title: titleI18n['full_name'],
-      dataIndex: "fullName",
-      key: "fullName",
+      title: titleI18n["name"],
+      dataIndex: "name",
+      key: "name",
       ...getColumnSearchProps("name"),
     },
     {
-      title: titleI18n['gender_upper'],
-      dataIndex: "gender",
-      key: "gender",
-      filters: [
-        {
-          text: 'Male',
-          value: 'male',
-        },
-        {
-          text: 'Female',
-          value: 'female',
-        },
-      ],
-      ...getColumnSearchProps("gender"),
-    },
-    {
-      title: titleI18n['phone'],
-      dataIndex: "phone",
-      key: "phone",
-      ...getColumnSearchProps("phone"),
-    },
-    {
-      title: "Email",
+      title: titleI18n["email"],
       dataIndex: "email",
       key: "email",
       ...getColumnSearchProps("email"),
     },
     {
-      title: titleI18n['address'],
-      dataIndex: "address",
-      key: "address",
-      ...getColumnSearchProps("address"),
-      sorter: (a, b) => a?.address?.length - b?.address?.length,
-      sortDirections: ["descend", "ascend"],
-    },
-    {
-      title: titleI18n['status'],
-      dataIndex: "status",
-      key: "status",
-      render: (status, item) => {
-        if (status == "active") {
-          return <Badge colorScheme={"green"}>{status}</Badge>;
-        }
-        if (status == "inactive") {
-          return <Badge colorScheme={"yellow"}>{status}</Badge>;
-        }
-        if (status == "lock") {
-          return <Badge colorScheme={"red"}>{status}</Badge>;
+      title: titleI18n["user_replied"],
+      dataIndex: "user",
+      key: "user",
+      render: (user, item) => {
+        if (user) {
+          return <div>{user.fullName}</div>;
         }
       },
     },
     {
-      title: titleI18n['action'],
-      dataIndex: "status",
-      key: "status",
-      render: (status,item) => {
-        if (status == "active") {
-          return <Button type="primary" danger onClick={()=>handleStatusAcc({idUser:item.id, status: "lock"})}>Lock</Button>
+      title: titleI18n["action"],
+      dataIndex: "user",
+      key: "user",
+      render: (user, item) => {
+        if (!user) {
+          return (
+            <Button
+              type="primary"
+              onClick={() => {
+                setIdContactFocus(item.id), onOpen();
+              }}
+            >
+              {titleI18n["reply"]}
+            </Button>
+          );
         }
-        if (status == "inactive") {
-          return <Button type="primary" warn onClick={()=>handleStatusAcc({idUser:item.id, status: "active"})}>Active</Button>;
-        }
-        if (status == "lock") {
-          return <Button type="primary" onClick={()=>handleStatusAcc({idUser:item.id, status: "active"})}>UnLock</Button>;
-        }
-      }
+      },
     },
   ];
 
@@ -274,12 +267,32 @@ function UserManagement() {
         rowKey={(record) => record.id}
         loading={loading}
         columns={columns}
-        dataSource={dataUser}
+        dataSource={dataContact}
         pagination={tableParams.pagination}
         onChange={handleTableChange}
       />
+      <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>{titleI18n["are_you_sure"]}</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Text mb="1rem">{titleI18n["note"]}</Text>
+            <Textarea
+              size="sm"
+              onChange={(e) => setDescConfirm(e.target.value)}
+            />
+          </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme="blue" onClick={handleReply}>
+              {titleI18n["confirm"]}
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </div>
   );
 }
 
-export default UserManagement;
+export default ContactMaintenance;

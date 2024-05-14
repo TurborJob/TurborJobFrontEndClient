@@ -9,14 +9,16 @@ import {
   Badge,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { Badge as BadgeAnt, Card as CardAnt } from "antd";
 import CarouselImages from "../widgets/CarouselImages";
 import moment from "moment";
+import { useAppSelector } from "../../reduxs/hooks";
 
-export default function CardJob({ job, handleApply }) {
+export default function CardJob({ job, handleApply, distance }) {
+  const { titleI18n } = useAppSelector((state) => state.account);
   return (
-    <Center py={6}>
+    <Center style={{ paddingBottom: "20px" }}>
       <Box
-        maxW={"320px"}
         w={"full"}
         bg={useColorModeValue("white", "gray.900")}
         boxShadow={"2xl"}
@@ -40,7 +42,8 @@ export default function CardJob({ job, handleApply }) {
         >
           {job?.description}
           <Text color={"blue.400"}>
-            {job?.quantityWorkerCurrent}/{job?.quantityWorkerTotal} worker
+            {job?.quantityWorkerCurrent}/{job?.quantityWorkerTotal}{" "}
+            {titleI18n["workers"]}
           </Text>{" "}
         </Text>
         <Text
@@ -50,11 +53,18 @@ export default function CardJob({ job, handleApply }) {
         >
           {job?.startDate && job?.dueDate && (
             <>
-              <div>from: {moment(job.startDate).format("DD/MM/YYYY HH:mm:ss")}</div>
+              <div>
+                {titleI18n["from"]}:{" "}
+                {moment(job.startDate).format("DD/MM/YYYY HH:mm:ss")}
+              </div>
 
-              <div>to: {moment(job.dueDate).format("DD/MM/YYYY HH:mm:ss")}</div>
+              <div>
+                {titleI18n["to"]}:{" "}
+                {moment(job.dueDate).format("DD/MM/YYYY HH:mm:ss")}
+              </div>
             </>
           )}
+          <div>{job?.address}</div>
         </Text>
 
         <Stack align={"center"} justify={"center"} direction={"row"} mt={6}>
@@ -70,7 +80,7 @@ export default function CardJob({ job, handleApply }) {
 
           {job?.viewer_num && (
             <Badge fontWeight={"800"} variant="subtle" colorScheme="green">
-              view: {job?.viewerNum}
+              {titleI18n["view"]}: {job?.viewerNum}
             </Badge>
           )}
         </Stack>
@@ -80,7 +90,7 @@ export default function CardJob({ job, handleApply }) {
             <Button
               flex={1}
               fontSize={"sm"}
-              onClick={()=>handleApply()}
+              onClick={() => handleApply()}
               rounded={"full"}
               bg={"teal.400"}
               color={"white"}
@@ -94,7 +104,7 @@ export default function CardJob({ job, handleApply }) {
                 bg: "teal.500",
               }}
             >
-              Apply Job
+              {titleI18n["apply_job"]}
             </Button>
           }
         </Stack>

@@ -19,7 +19,7 @@ import Loader from "../../Loader";
 
 function ListJob() {
   // Component, System
-  const { webSocketService, profile } = useAppSelector(
+  const { webSocketService, profile, titleI18n } = useAppSelector(
     (state) => state.account
   );
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -77,15 +77,15 @@ function ListJob() {
     pagination.page = page;
     pagination.size = pageSize;
     setPagination(pagination)
-    fetch(true ,page - 1, pageSize, false);
+    await fetch(true ,page - 1, pageSize, false);
   };
 
   const handlerFindJobNormal = async (jobId) => {
     setIsLoadingNormal(true);
     const res = await api.findNormalJob({ jobId });
     if (res) {
-      toast(getToast("success", res?.metadata, "Success"));
-      fetch(true)
+      toast(getToast("success", res?.metadata, titleI18n['success']));
+      await fetch(true)
     }
     setIsLoadingNormal(false);
   };
@@ -94,8 +94,8 @@ function ListJob() {
     setIsLoadingNormal(true);
     const res = await api.updateJobToDone({ jobId });
     if (res) {
-      toast(getToast("success", res?.metadata, "Success"));
-      fetch(true, null, null, false);
+      toast(getToast("success", res?.metadata, titleI18n['success']));
+      await fetch(true, pagination.page-1, pagination.size, false);
     }
     setIsLoadingNormal(false);
   };
@@ -119,11 +119,11 @@ function ListJob() {
 
     if (res) {
       webSocketService.sendPrivateRequestUpdateNotify(userReqId, profile?.id, "Send request update notify", jobFocus?.id);
-      toast(getToast("success", res?.metadata, "Success"));
+      toast(getToast("success", res?.metadata, titleI18n['success']));
       let checkJob = await api.checkJobSuccess({ jobId: jobFocus?.id });
       if (checkJob?.metadata) {
         onClose();
-        fetch(true, null, null, false);
+        await fetch(true, pagination.page, pagination.size, false);
         return;
       }
       getApplyRequest(jobFocus?.id);

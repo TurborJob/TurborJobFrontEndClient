@@ -6,7 +6,7 @@ import { useAppSelector } from "../../reduxs/hooks";
 
 function BusinessSetting() {
   const [isLoading, setIsLoading] = useState(false);
-  const { roles } = useAppSelector((state) => state.account);
+  const { roles, titleI18n } = useAppSelector((state) => state.account);
   const toast = useToast();
 
   const handleUpdateBusiness = async () => {
@@ -23,8 +23,7 @@ function BusinessSetting() {
         query="free"
         styles={{ px: "1", py: "1", bg: "orange.100", fontWeight: "bold" }}
       >
-        The feature is currently free to use and may charge a fee in the future
-        !
+        {titleI18n['the_feature_is_currently_free_to_use_and_may_charge_a_fee_in_the_future']}
       </Highlight>
       {roles && roles?.find((role) => role.name == "Business") ? (
         <div>
@@ -32,12 +31,12 @@ function BusinessSetting() {
           query="business"
           styles={{ px: "1", py: "1", bg: "blue.100", fontWeight: "bold" }}
         >
-          You were a business !
+          {titleI18n['you_were_a_business']}
         </Highlight>
         </div>
       ) : (
         <Button my={10} colorScheme="orange" onClick={handleUpdateBusiness}>
-          Upgrade to Business
+          {titleI18n['upgrade_to_business']}
         </Button>
       )}
     </div>

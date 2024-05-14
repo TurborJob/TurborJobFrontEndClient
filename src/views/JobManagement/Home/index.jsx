@@ -5,6 +5,7 @@ import { Stack } from "@chakra-ui/react";
 import { Row, Col } from "antd";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
+import { useAppSelector } from "../../../reduxs/hooks";
 
 ChartJS.register(ArcElement, Tooltip, Legend, Title);
 
@@ -67,7 +68,9 @@ let defaultDoughnutDataRating = {
   ],
 };
 
-function HomeWorker() {
+function HomeBusiness() {
+  const { titleI18n } = useAppSelector((state) => state.account);
+
   const [businessStatistic, setBusinessStatistic] = useState();
   const [doughnutDataJobs, setDoughnutDataJobs] = useState();
   const [doughnutDataRequest, setDoughnutDataRequest] = useState();
@@ -131,7 +134,7 @@ function HomeWorker() {
                   plugins: {
                     title: {
                       display: true,
-                      text: "Status in jobs of Business",
+                      text: titleI18n['status_in_jobs_of_business'],
                       align: "center",
                       padding: {
                         top: 10,
@@ -163,7 +166,7 @@ function HomeWorker() {
                   plugins: {
                     title: {
                       display: true,
-                      text: "Status in apply requests of Business",
+                      text: titleI18n['status_in_apply_requests_of_business'],
                       align: "center",
                       padding: {
                         top: 10,
@@ -195,7 +198,7 @@ function HomeWorker() {
                   plugins: {
                     title: {
                       display: true,
-                      text: "Status in rating of Business",
+                      text: titleI18n['status_in_rating_of_business'],
                       align: "center",
                       padding: {
                         top: 10,
@@ -223,4 +226,4 @@ function HomeWorker() {
   );
 }
 
-export default HomeWorker;
+export default HomeBusiness;

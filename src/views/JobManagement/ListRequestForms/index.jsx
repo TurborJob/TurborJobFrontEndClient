@@ -22,7 +22,7 @@ import Loader from "../../Loader";
 import { useAppSelector } from "../../../reduxs/hooks";
 
 function ListRequestForms() {
-  const { webSocketService, profile } = useAppSelector(
+  const { webSocketService, profile, titleI18n } = useAppSelector(
     (state) => state.account
   );
   const location = useLocation();
@@ -38,7 +38,7 @@ function ListRequestForms() {
 
   const fetch = useCallback(async (page = 0, size = 10) => {
     if (!location || !location?.hash) {
-      toast(getToast("error", "Job not found!", "Error"));
+      toast(getToast("error", titleI18n['job_not_found'], titleI18n['error']));
       return;
     }
     let jobId = parseInt(location.hash.replace(/^#/, ""));
@@ -135,10 +135,10 @@ function ListRequestForms() {
       <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Are you sure?</ModalHeader>
+          <ModalHeader>{titleI18n['are_you_sure']}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Text mb="1rem">Note</Text>
+            <Text mb="1rem">{titleI18n['note']}</Text>
             <Textarea
               size="sm"
               onChange={(e) => setDescConfirm(e.target.value)}
@@ -147,7 +147,7 @@ function ListRequestForms() {
 
           <ModalFooter>
             <Button colorScheme="blue" onClick={handleConfirm}>
-              Confirm
+              {titleI18n['confirm']}
             </Button>
           </ModalFooter>
         </ModalContent>
