@@ -1,16 +1,38 @@
+export const pocketsExtend = [
+  {
+    id: 1,
+    numDayExtend: 1,
+    time: "day",
+    limitJobInDay: 5,
+    limitWorkerInDay: 10,
+    price: { TBV: 50 },
+  },
+  {
+    id: 2,
+    numDayExtend: 30,
+    time: "month",
+    limitJobInDay: 5,
+    limitWorkerInDay: 15,
+    price: { TBV: 200 },
+  },
+  {
+    id: 3,
+    numDayExtend: 365,
+    time: "year",
+    limitJobInDay: 10,
+    limitWorkerInDay: 20,
+    price: { TBV: 500 },
+  },
+];
 
-
-  export const NAV_ITEMS_BUSINESS = [
-    {
-      label: "Job Management",
-      href: "../job-management/home",
-    },
-    {
-      label: "Contact",
-      href: "/contact",
-    },
-  ];
-
-  export const NAV_ITEMS_ADMIN = [
-    
-  ];
+export const paymentMethods = [
+  {
+    id: 1,
+    code: "metamask",
+    name: "Meta Mask",
+    status: 1,
+    logo: "/image/meta_mask.png",
+    currency: "TBV",
+  },
+  { id: 2, code: "vnpay", name: "VN pay", status: 0, logo: "/image/vnpay.png" },
+];

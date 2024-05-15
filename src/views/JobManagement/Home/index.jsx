@@ -1,11 +1,20 @@
 import React, { useEffect, useState } from "react";
 import Statistics from "../Home/Statistic";
 import api from "../../../services/api";
-import { Stack } from "@chakra-ui/react";
+import {
+  Box,
+  Card,
+  CardBody,
+  CardHeader,
+  Center,
+  Heading,
+  Stack,
+} from "@chakra-ui/react";
 import { Row, Col } from "antd";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
 import { useAppSelector } from "../../../reduxs/hooks";
+import moment from "moment/moment";
 
 ChartJS.register(ArcElement, Tooltip, Legend, Title);
 
@@ -116,6 +125,57 @@ function HomeBusiness() {
         totalRating={businessStatistic?.totalRating}
       />
       <Stack>
+        <Center>
+          <Box m={10}>
+            <Card>
+              <CardHeader>
+                <Heading size="md">
+                  {titleI18n["number_job__success_today"]}
+                </Heading>
+              </CardHeader>
+              <CardBody>
+                <div style={{ textAlign: "center" }}>
+                  {businessStatistic?.numJobSuccessToDay}/
+                  <span style={{ fontWeight: 800 }}>
+                    {businessStatistic?.limitJobPerDay}
+                  </span>
+                </div>
+              </CardBody>
+            </Card>
+          </Box>
+
+          <Box>
+            <Card>
+              <CardHeader>
+                <Heading size="md">
+                  {titleI18n["number_worker_approve_today"]}
+                </Heading>
+              </CardHeader>
+              <CardBody>
+                <div style={{ textAlign: "center" }}>
+                  {businessStatistic?.numWorkerApproveToday}/
+                  <span style={{ fontWeight: 800 }}>
+                    {businessStatistic?.limitWorkerPerDay}
+                  </span>
+                </div>
+              </CardBody>
+            </Card>
+          </Box>
+          <Box m={10}>
+            <Card>
+              <CardHeader>
+                <Heading size="md">{titleI18n["time_expire"]}</Heading>
+              </CardHeader>
+              <CardBody>
+                <div style={{ textAlign: "center" }}>
+                  {moment(businessStatistic?.timeExpire).format("DD-MM-YYYY")}
+                </div>
+              </CardBody>
+            </Card>
+          </Box>
+        </Center>
+      </Stack>
+      <Stack>
         <Row gutter={[12, 12]} style={{ padding: "20px" }}>
           <Col
             xxs={24}
@@ -134,7 +194,7 @@ function HomeBusiness() {
                   plugins: {
                     title: {
                       display: true,
-                      text: titleI18n['status_in_jobs_of_business'],
+                      text: titleI18n["status_in_jobs_of_business"],
                       align: "center",
                       padding: {
                         top: 10,
@@ -156,9 +216,16 @@ function HomeBusiness() {
               />
             )}
           </Col>
-          <Col xxs={24} xs={24} sm={24} md={12} lg={12} xl={8} xxl={8} 
+          <Col
+            xxs={24}
+            xs={24}
+            sm={24}
+            md={12}
+            lg={12}
+            xl={8}
+            xxl={8}
             style={{ padding: "40px" }}
-            >
+          >
             {doughnutDataRequest && (
               <Doughnut
                 data={doughnutDataRequest}
@@ -166,7 +233,7 @@ function HomeBusiness() {
                   plugins: {
                     title: {
                       display: true,
-                      text: titleI18n['status_in_apply_requests_of_business'],
+                      text: titleI18n["status_in_apply_requests_of_business"],
                       align: "center",
                       padding: {
                         top: 10,
@@ -188,9 +255,16 @@ function HomeBusiness() {
               />
             )}
           </Col>
-          <Col xxs={24} xs={24} sm={24} md={12} lg={12} xl={8} xxl={8}
+          <Col
+            xxs={24}
+            xs={24}
+            sm={24}
+            md={12}
+            lg={12}
+            xl={8}
+            xxl={8}
             style={{ padding: "40px" }}
-            >
+          >
             {doughnutDataRating && (
               <Doughnut
                 data={doughnutDataRating}
@@ -198,7 +272,7 @@ function HomeBusiness() {
                   plugins: {
                     title: {
                       display: true,
-                      text: titleI18n['status_in_rating_of_business'],
+                      text: titleI18n["status_in_rating_of_business"],
                       align: "center",
                       padding: {
                         top: 10,

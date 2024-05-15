@@ -37,6 +37,7 @@ var path = {
   updateJobToDone: { href: "/api/v1/business/update-job-done" },
   checkJobSuccess: { href: "/api/v1/business/check-job-success" },
   getBusinessStatistic: { href: "/api/v1/business/get-business-statistic" },
+  extendBusiness: {href:"/api/v1/business/extend-business"},
 
   getAdminStatistic: { href: "/api/v1/admin/get-admin-statistic" },
   getUserByAdmin: { href: "api/v1/admin/get-user-by-admin" },

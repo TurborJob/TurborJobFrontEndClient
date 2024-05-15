@@ -25,7 +25,7 @@
   "plans_that_fit_your_need": "Các gói phù hợp với nhu cầu của bạn",
   "trial_description": "Bắt đầu với 30 ngày dùng thử miễn phí. Không cần thẻ tín dụng. Hủy bất cứ lúc nào.",
   "hobby": "Thú vui",
-  "month": "tháng",
+  "month_down": "tháng",
   "unlimited_build_minutes": "phút xây dựng không giới hạn",
   "jobs": "Việc Làm",
   "workers": "Nhân công",
@@ -120,7 +120,7 @@
   "password_must_contain_uppercase_letters_lowercase_letters_numbers_special_characters_and_be_at_least_8_characters_long": "Mật khẩu phải chứa chữ cái in hoa, chữ cái thường, số, ký tự đặc biệt và có độ dài ít nhất 8 ký tự.",
   "phone_numbers_for_vietnamese_carriers_must_be_either_10_or_11_digits_long": "Số điện thoại của nhà mạng Việt Nam phải dài 10 hoặc 11 chữ số.",
   "upload": "Tải lên",
-  "login":"Đăng nhập",
+  "login": "Đăng nhập",
   "search": "Tìm kiếm",
   "reset": "Đặt lại",
   "close": "Đóng",
@@ -178,5 +178,13 @@
   "update": "Cập nhật",
   "account_setting": "Cài đặt Tài khoản",
   "profile_setting": "Cài đặt Hồ sơ",
-  "business_setting": "Cài đặt Doanh nghiệp"
+  "business_setting": "Cài đặt Doanh nghiệp",
+  "use": "Sử dụng",
+  "unavailable": "Không có sẵn",
+  "day": "Ngày",
+  "month": "Tháng",
+  "year": "Năm",
+  "number_job__success_today": "Số lượng công việc thành công hôm nay",
+  "number_worker_approve_today": "Số lượng công nhân được duyệt hôm nay",
+  "time_expire": "Thời gian hết hạn"
 }

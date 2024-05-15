@@ -4,7 +4,7 @@ import {Col, Flex, Rate, Row } from "antd";
 import { useAppSelector } from "../../reduxs/hooks";
 const desc = ["terrible", "bad", "normal", "good", "wonderful"];
 
-function RatingForm({ jobName, user, handleRating }) {
+function RatingForm({ jobName, user,rateId, handleRating }) {
   const { titleI18n } = useAppSelector((state) => state.account);
 
   const [rateValue, setRateValue] = useState(null);
@@ -30,7 +30,7 @@ function RatingForm({ jobName, user, handleRating }) {
         />
         </Col>
         <Col span={4}>
-            <Button colorScheme="teal" style={{height:"100%", width:"100%"}} variant='solid' onClick={()=>handleRating(rateValue, note, user?.id)}>
+            <Button colorScheme="teal" style={{height:"100%", width:"100%"}} variant='solid' onClick={()=>handleRating(rateValue, note, user?.id,rateId)}>
               {titleI18n['rate']}
             </Button>
         </Col>

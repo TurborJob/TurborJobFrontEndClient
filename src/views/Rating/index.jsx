@@ -33,7 +33,7 @@ function RatingPage() {
     fetch();
   }, []);
 
-  const handleRating = async (rateValue, note, toUser) => {
+  const handleRating = async (rateValue, note, toUser, rateId) => {
     if (!rateValue) {
       toast(getToast("error", titleI18n['rate_value_is_require'], titleI18n['error']));
       return;
@@ -53,6 +53,7 @@ function RatingPage() {
       rateValue: parseFloat(rateValue),
       note,
       toUser,
+      rateId
     });
     if (res) {
       toast(getToast("success", res?.metadata, titleI18n['success']));
@@ -87,6 +88,7 @@ function RatingPage() {
                 <RatingForm
                   jobName={userJob?.jobName}
                   user={userJob?.user}
+                  rateId={userJob?.rateId}
                   handleRating={handleRating}
                 />
               </Col>

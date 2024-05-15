@@ -25,6 +25,7 @@
     "axios": "^1.6.8",
     "chart.js": "^4.4.2",
     "device-detector-js": "^3.0.3",
+    "ethers": "^5.7.2",
     "framer-motion": "^11.0.23",
     "leaflet": "^1.9.4",
     "moment": "^2.30.1",

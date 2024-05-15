@@ -57,13 +57,13 @@ export default function Pricing() {
             </Text>
             <HStack justifyContent="center">
               <Text fontSize="3xl" fontWeight="600">
-                $
+                TBV
               </Text>
               <Text fontSize="5xl" fontWeight="900">
-                79
+                50
               </Text>
               <Text fontSize="3xl" color="gray.500">
-                /{titleI18n["month"]}
+                /{titleI18n["day"]}
               </Text>
             </HStack>
           </Box>
@@ -74,16 +74,12 @@ export default function Pricing() {
           >
             <List spacing={3} textAlign="start" px={12}>
               <ListItem>
-                <ListIcon as={FaCheckCircle} color="green.500" />
-                {titleI18n["unlimited_build_minutes"]}
+                <ListIcon as={FaCheckCircle} color="green.500" />5{" "}
+                {titleI18n["jobs"]}/{titleI18n["day"]}
               </ListItem>
               <ListItem>
                 <ListIcon as={FaCheckCircle} color="green.500" />
-                20 {titleI18n["jobs"]}
-              </ListItem>
-              <ListItem>
-                <ListIcon as={FaCheckCircle} color="green.500" />
-                20 {titleI18n["workers"]}
+                10 {titleI18n["workers"]}/{titleI18n["day"]}
               </ListItem>
             </List>
             <Box w="80%" pt={7}>
@@ -121,10 +117,10 @@ export default function Pricing() {
               </Text>
               <HStack justifyContent="center">
                 <Text fontSize="3xl" fontWeight="600">
-                  $
+                  TBV
                 </Text>
                 <Text fontSize="5xl" fontWeight="900">
-                  149
+                  200
                 </Text>
                 <Text fontSize="3xl" color="gray.500">
                   /{titleI18n["month"]}
@@ -138,16 +134,12 @@ export default function Pricing() {
             >
               <List spacing={3} textAlign="start" px={12}>
                 <ListItem>
-                  <ListIcon as={FaCheckCircle} color="green.500" />
-                  {titleI18n["unlimited_build_minutes"]}
+                  <ListIcon as={FaCheckCircle} color="green.500" />5{" "}
+                  {titleI18n["jobs"]}/{titleI18n["day"]}
                 </ListItem>
                 <ListItem>
                   <ListIcon as={FaCheckCircle} color="green.500" />
-                  50 {titleI18n["jobs"]}
-                </ListItem>
-                <ListItem>
-                  <ListIcon as={FaCheckCircle} color="green.500" />
-                  30 {titleI18n["workers"]}
+                  15 {titleI18n["workers"]}/{titleI18n["day"]}
                 </ListItem>
               </List>
               <Box w="80%" pt={7}>
@@ -165,13 +157,13 @@ export default function Pricing() {
             </Text>
             <HStack justifyContent="center">
               <Text fontSize="3xl" fontWeight="600">
-                $
+                TBV
               </Text>
               <Text fontSize="5xl" fontWeight="900">
-                349
+                500
               </Text>
               <Text fontSize="3xl" color="gray.500">
-                /{titleI18n["month"]}
+                /{titleI18n["year"]}
               </Text>
             </HStack>
           </Box>
@@ -183,15 +175,11 @@ export default function Pricing() {
             <List spacing={3} textAlign="start" px={12}>
               <ListItem>
                 <ListIcon as={FaCheckCircle} color="green.500" />
-                {titleI18n["unlimited_build_minutes"]}
+                10 {titleI18n["jobs"]}/{titleI18n["day"]}
               </ListItem>
               <ListItem>
                 <ListIcon as={FaCheckCircle} color="green.500" />
-                200 {titleI18n["jobs"]}
-              </ListItem>
-              <ListItem>
-                <ListIcon as={FaCheckCircle} color="green.500" />
-                100 {titleI18n["workers"]}
+                20 {titleI18n["workers"]}/{titleI18n["day"]}
               </ListItem>
             </List>
             <Box w="80%" pt={7}>

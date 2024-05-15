@@ -25,7 +25,7 @@
   "plans_that_fit_your_need": "Plans that fit your need",
   "trial_description": "Start with 30-day free trial. No credit card needed. Cancel at anytime.",
   "hobby": "Hobby",
-  "month": "month",
+  "month_down": "month",
   "unlimited_build_minutes": "unlimited build minutes",
   "jobs": "Jobs",
   "workers": "Worker",
@@ -178,5 +178,13 @@
   "update":"Update",
   "account_setting":"Account Setting",
   "profile_setting":"Profile Setting",
-  "business_setting":"Business Setting"
+  "business_setting":"Business Setting",
+  "use":"Use",
+  "unavailable": "Unavailable",
+  "day":"Day",
+  "month":"Month",
+  "year":"Year",
+  "number_job__success_today":"Number job success today",
+  "number_worker_approve_today":"Number worker approve today",
+  "time_expire":"Time expire"
 }
