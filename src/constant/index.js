@@ -5,7 +5,7 @@ export const pocketsExtend = [
     time: "day",
     limitJobInDay: 5,
     limitWorkerInDay: 10,
-    price: { TBV: 50 },
+    price: { TBV: 50 , VND: 50000},
   },
   {
     id: 2,
@@ -13,7 +13,7 @@ export const pocketsExtend = [
     time: "month",
     limitJobInDay: 5,
     limitWorkerInDay: 15,
-    price: { TBV: 200 },
+    price: { TBV: 200 ,VND: 200000},
   },
   {
     id: 3,
@@ -21,7 +21,7 @@ export const pocketsExtend = [
     time: "year",
     limitJobInDay: 10,
     limitWorkerInDay: 20,
-    price: { TBV: 500 },
+    price: { TBV: 500, VND: 500000 },
   },
 ];
 
@@ -34,5 +34,12 @@ export const paymentMethods = [
     logo: "/image/meta_mask.png",
     currency: "TBV",
   },
-  { id: 2, code: "vnpay", name: "VN pay", status: 0, logo: "/image/vnpay.png" },
+  {
+    id: 2,
+    code: "vnpay",
+    name: "VN pay",
+    status: 1,
+    logo: "/image/vnpay.png",
+    currency: "VND",
+  },
 ];

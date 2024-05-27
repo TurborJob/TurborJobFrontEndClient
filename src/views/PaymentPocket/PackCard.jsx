@@ -42,8 +42,8 @@ export default function PackCard({ pack, setFocusPack, focusPack }) {
                 align={"center"}
                 justify={"center"}
               >
-                <Text fontSize={"xl"}>{currency}</Text>
-                <Text fontSize={"4xl"} fontWeight={800}>
+                <Text fontSize={"lg"}>{currency}</Text>
+                <Text fontSize={"4lg"} fontWeight={800}>
                   {val}
                 </Text>
                 <Text color={"gray.500"}>/{titleI18n[pack.time]}</Text>

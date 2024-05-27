@@ -231,6 +231,12 @@ function ContactMaintenance() {
       ...getColumnSearchProps("email"),
     },
     {
+      title: titleI18n["content"],
+      dataIndex: "content",
+      key: "content",
+      ...getColumnSearchProps("content"),
+    },
+    {
       title: titleI18n["user_replied"],
       dataIndex: "user",
       key: "user",

@@ -186,5 +186,8 @@
   "year": "Năm",
   "number_job__success_today": "Số lượng công việc thành công hôm nay",
   "number_worker_approve_today": "Số lượng công nhân được duyệt hôm nay",
-  "time_expire": "Thời gian hết hạn"
+  "time_expire": "Thời gian hết hạn",
+  "content":"Nội dung",
+  "num_rate":"Lượt đánh giá"
+
 }

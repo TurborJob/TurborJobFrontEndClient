@@ -12,6 +12,7 @@ var path = {
   logout: { href: "/api/v1/logout" },
   getRoleName: { href: "/api/v1/user/get-role-name" },
   updateProfile: { href: "/api/v1/auth/update-profile" },
+  vnPay: {href: "/api/v1/all/payment/vnpay"},
 
   updateBusiness: { href: "/api/v1/user-only/update-business" },
   getNormalJob: { href: "/api/v1/user-only/get-normal-job" },

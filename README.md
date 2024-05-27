@@ -10,5 +10,5 @@ Currently, two official plugins are available:
 
 # Account: 
 worker: turborvipfather1 12345678aB!
-business: turborvipfather 12345678aA!
+business: turborvipfather 12345678aB!
 admin: turborvipAdmin 123456aB!

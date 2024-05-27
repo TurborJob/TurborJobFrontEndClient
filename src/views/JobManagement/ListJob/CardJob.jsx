@@ -89,7 +89,7 @@ export default function CardJob({
     if (jobState?.status == "inactive") {
       return (
         <>
-          <Button
+          {/* <Button
             flex={1}
             fontSize={"sm"}
             rounded={"full"}
@@ -99,7 +99,7 @@ export default function CardJob({
             onClick={() => handlerFindJobNormal(jobState?.id)}
           >
             {titleI18n['find']}
-          </Button>
+          </Button> */}
           <Button
             flex={1}
             fontSize={"sm"}

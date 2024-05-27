@@ -95,7 +95,7 @@ function ListJob() {
     const res = await api.updateJobToDone({ jobId });
     if (res) {
       toast(getToast("success", res?.metadata, titleI18n['success']));
-      await fetch(true, pagination.page-1, pagination.size, false);
+      await fetch(true, pagination.page, pagination.size, false);
     }
     setIsLoadingNormal(false);
   };

@@ -42,17 +42,18 @@ function BusinessSetting() {
 
   return (
     <div>
-      <Highlight
-        query="free"
-        styles={{ px: "1", py: "1", bg: "orange.100", fontWeight: "bold" }}
-      >
-        {
-          titleI18n[
-            "the_feature_is_currently_free_to_use_and_may_charge_a_fee_in_the_future"
-          ]
-        }
-      </Highlight>
-
+      {roles && !roles?.find((role) => role.name == "Business") && (
+        <Highlight
+          query="free"
+          styles={{ px: "1", py: "1", bg: "orange.100", fontWeight: "bold" }}
+        >
+          {
+            titleI18n[
+              "the_feature_is_currently_free_to_use_and_may_charge_a_fee_in_the_future"
+            ]
+          }
+        </Highlight>
+      )}
       {roles && roles?.find((role) => role.name == "Business") ? (
         <div>
           <Highlight

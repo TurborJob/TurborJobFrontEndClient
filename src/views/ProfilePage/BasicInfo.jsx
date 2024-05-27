@@ -98,7 +98,7 @@ export default function BasicInfo() {
               <Rate disabled value={profile?.rating} />
             </Flex>
             <Center gap="middle" vertical>
-              {profile?.countRate} {titleI18n['reviewer']}
+              {profile?.countRate} {titleI18n['num_rate']}
             </Center>
           </Stack>
         </Stack>

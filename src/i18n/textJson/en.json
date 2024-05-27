@@ -171,7 +171,7 @@
   "old_password":"Old Password",
   "new_password":"New Password",
   "submit":"Submit",
-  "the_feature_is_currently_free_to_use_and_may_charge_a_fee_in_the_future":"The feature is currently free to use and may charge a fee in the future!",
+  "the_feature_is_currently_free_to_use_and_may_charge_a_fee_in_the_future":"The feature is 30 day free trial to use and may charge a fee in the future!",
   "you_were_a_business":"You were a business !",
   "upgrade_to_business":"Upgrade to Business",
   "full_name_is_require":"Full name is requires!",
@@ -186,5 +186,7 @@
   "year":"Year",
   "number_job__success_today":"Number job success today",
   "number_worker_approve_today":"Number worker approve today",
-  "time_expire":"Time expire"
+  "time_expire":"Time expire",
+  "content":"Content",
+  "num_rate":"Number rate"
 }

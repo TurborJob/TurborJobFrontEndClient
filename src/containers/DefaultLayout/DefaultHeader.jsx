@@ -134,18 +134,7 @@ export default function WithSubnavigation() {
   let NAV_ITEMS_WORKER = [
     {
       label: titleI18n?.["find_jobs"],
-      children: [
-        {
-          label: titleI18n?.["real_time"],
-          subLabel: titleI18n?.["find_your_work_realtime"],
-          href: "/find-jobs/realtime",
-        },
-        // {
-        //   label: "Normal",
-        //   subLabel: "Find your work normal",
-        //   href: "/find-jobs/normal",
-        // },
-      ],
+      href: "/find-jobs/realtime",
     },
     {
       label: titleI18n?.["job_apply"],
